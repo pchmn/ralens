@@ -1,5 +1,5 @@
 {
-  "name": "@prevezic/nhost-proxy-server",
+  "name": "@ralens/nhost-proxy-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,8 +11,8 @@
   "author": "pchmn",
   "license": "MIT",
   "devDependencies": {
-    "@prevezic/eslint-config": "workspace:*",
-    "@prevezic/tsconfig": "workspace:*",
+    "@ralens/eslint-config": "workspace:*",
+    "@ralens/tsconfig": "workspace:*",
     "@types/http-proxy": "^1.17.11",
     "@types/node": "^20.4.4",
     "esbuild-runner": "^2.2.2",

@@ -30,9 +30,9 @@ jobs:
       - name: Install Firebase CLI
         run: pnpm add -g firebase-tools
 
-      - name: Deploy to prevezic-dev
+      - name: Deploy to ralens-dev
         run: |
-          firebase use prevezic-dev
+          firebase use ralens-dev
           pnpm deploy:rules
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

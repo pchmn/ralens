@@ -71,11 +71,11 @@ jobs:
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY_PROD }} >> .env
           cat .env
 
-      - name: Deploy to prevezic
+      - name: Deploy to ralens
         run: |
-          firebase use prevezic
+          firebase use ralens
           cd apps/functions
-          pnpm remove -D @prevezic/tsconfig eslint-config-prevezic-ts
+          pnpm remove -D @ralens/tsconfig eslint-config-ralens-ts
           pnpm deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

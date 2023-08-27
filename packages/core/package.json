@@ -1,5 +1,5 @@
 {
-  "name": "@prevezic/core",
+  "name": "@ralens/core",
   "version": "0.0.0",
   "private": true,
   "author": "pchmn",
@@ -8,8 +8,8 @@
   "types": "src/index.ts",
   "devDependencies": {
     "@nhost/nhost-js": "^2.2.13",
-    "@prevezic/eslint-config": "workspace:*",
-    "@prevezic/tsconfig": "workspace:*",
+    "@ralens/eslint-config": "workspace:*",
+    "@ralens/tsconfig": "workspace:*",
     "typescript": "^5.1.6"
   }
 }

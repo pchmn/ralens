@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['@prevezic/eslint-config/react'],
+  extends: ['@ralens/eslint-config/react'],
 };

@@ -1,11 +1,11 @@
 {
-  "name": "@prevezic/react-native",
+  "name": "@ralens/react-native",
   "version": "1.0.0",
   "main": "src/index.ts",
   "peerDependencies": {
     "@apollo/client": "^3.8.1",
     "@pchmn/expo-material3-theme": "^1.3.1",
-    "@prevezic/core": "workspace:*",
+    "@ralens/core": "workspace:*",
     "@react-navigation/native": "^6.1.7",
     "expo": "~49.0.8",
     "expo-crypto": "~12.4.1",
@@ -22,9 +22,9 @@
   "devDependencies": {
     "@apollo/client": "^3.8.1",
     "@pchmn/expo-material3-theme": "^1.3.1",
-    "@prevezic/core": "workspace:*",
-    "@prevezic/eslint-config": "workspace:*",
-    "@prevezic/tsconfig": "workspace:*",
+    "@ralens/core": "workspace:*",
+    "@ralens/eslint-config": "workspace:*",
+    "@ralens/tsconfig": "workspace:*",
     "@react-navigation/native": "^6.1.7",
     "@types/react": "^18.2.20",
     "expo": "~49.0.8",

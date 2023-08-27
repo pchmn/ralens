@@ -1,4 +1,4 @@
 {
-  "extends": "@prevezic/tsconfig/base.json",
+  "extends": "@ralens/tsconfig/base.json",
   "include": ["src"]
 }

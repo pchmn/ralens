@@ -1,5 +1,5 @@
-import { Installation } from '@prevezic/core';
-import { getSecureStorageInstance } from '@prevezic/react-native';
+import { Installation } from '@ralens/core';
+import { getSecureStorageInstance } from '@ralens/react-native';
 import messaging from '@react-native-firebase/messaging';
 import * as Application from 'expo-application';
 import { randomUUID } from 'expo-crypto';

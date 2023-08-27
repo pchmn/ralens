@@ -1,4 +1,4 @@
-import { Flex, Text } from '@prevezic/react-native';
+import { Flex, Text } from '@ralens/react-native';
 
 export default function Films() {
   console.log('in Films');

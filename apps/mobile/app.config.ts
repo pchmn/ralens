@@ -4,27 +4,27 @@ import { ExpoConfig } from '@expo/config';
 
 const name =
   process.env.APP_ENV === 'production'
-    ? 'Prevezic'
+    ? 'Ralens'
     : process.env.APP_ENV === 'development'
-    ? 'PrevezicDev'
+    ? 'RalensDev'
     : process.env.APP_ENV === 'preview'
-    ? 'PrevezicPreview'
-    : 'PrevezicLocal';
+    ? 'RalensPreview'
+    : 'RalensLocal';
 
 const appIdentifier =
   process.env.APP_ENV === 'production'
-    ? 'com.prevezic.app'
+    ? 'com.ralens.app'
     : process.env.APP_ENV === 'development'
-    ? 'com.prevezic.dev'
+    ? 'com.ralens.dev'
     : process.env.APP_ENV === 'preview'
-    ? 'com.prevezic.preview'
-    : 'com.prevezic.local';
+    ? 'com.ralens.preview'
+    : 'com.ralens.local';
 
 const config: ExpoConfig = {
   owner: 'pchmn',
   name,
-  slug: 'prevezic',
-  scheme: 'prevezic',
+  slug: 'ralens',
+  scheme: 'ralens',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -35,7 +35,7 @@ const config: ExpoConfig = {
     backgroundColor: '#ffffff',
   },
   updates: {
-    url: 'https://u.expo.dev/7ebb51eb-8225-4b52-a8be-1a4174bfe8ad',
+    url: 'https://u.expo.dev/5af2b1a0-4cb6-4afd-974c-22fe1007984d',
   },
   runtimeVersion: {
     policy: 'appVersion',
@@ -106,7 +106,7 @@ const config: ExpoConfig = {
         file: 'sentry-expo/upload-sourcemaps',
         config: {
           organization: 'pchmn',
-          project: process.env.APP_ENV === 'production' ? 'prevezic' : 'prevezic-dev',
+          project: process.env.APP_ENV === 'production' ? 'ralens' : 'ralens-dev',
         },
       },
     ],
@@ -116,7 +116,7 @@ const config: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId: '7ebb51eb-8225-4b52-a8be-1a4174bfe8ad',
+      projectId: '5af2b1a0-4cb6-4afd-974c-22fe1007984d',
     },
   },
   experiments: {

@@ -1,6 +1,6 @@
 import { useUserData } from '@nhost/react';
-import { Installation, UPSERT_INSTALLATION } from '@prevezic/core';
-import { useEffectOnce, useInsertMutation } from '@prevezic/react-native';
+import { Installation, UPSERT_INSTALLATION } from '@ralens/core';
+import { useEffectOnce, useInsertMutation } from '@ralens/react-native';
 import messaging from '@react-native-firebase/messaging';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';

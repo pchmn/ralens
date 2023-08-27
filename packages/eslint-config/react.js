@@ -25,17 +25,17 @@ module.exports = {
           {
             name: 'react-native-paper',
             importNames: ['useTheme'],
-            message: 'Use `useAppTheme` from `@prevezic/react-native` instead.',
+            message: 'Use `useAppTheme` from `@ralens/react-native` instead.',
           },
           {
             name: 'react-native-paper',
             importNames: ['Text'],
-            message: 'Use `Text` from `@prevezic/react-native` instead.',
+            message: 'Use `Text` from `@ralens/react-native` instead.',
           },
           {
             name: '@apollo/client',
             importNames: ['useSubscription'],
-            message: 'Use `useSubscription` from `@prevezic/react-native` instead.',
+            message: 'Use `useSubscription` from `@ralens/react-native` instead.',
           },
         ],
       },

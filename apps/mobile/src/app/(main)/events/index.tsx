@@ -1,4 +1,4 @@
-import { Flex } from '@prevezic/react-native';
+import { Flex } from '@ralens/react-native';
 import { useState } from 'react';
 import { Button } from 'react-native-paper';
 

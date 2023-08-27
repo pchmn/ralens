@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['@prevezic/eslint-config/base'],
+  extends: ['@ralens/eslint-config/base'],
 };

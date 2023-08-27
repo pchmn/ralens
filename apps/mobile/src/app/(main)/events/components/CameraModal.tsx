@@ -1,4 +1,4 @@
-import { Flex, useAppTheme } from '@prevezic/react-native';
+import { Flex, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
 // import { Camera, FlashMode } from 'expo-camera';
 import { useRef, useState } from 'react';

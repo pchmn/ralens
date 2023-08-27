@@ -1,4 +1,4 @@
-import { Flex, useAppTheme } from '@prevezic/react-native';
+import { Flex, useAppTheme } from '@ralens/react-native';
 import { Button } from 'react-native-paper';
 
 import { useIsFirstLaunch } from '@/core/onboard';

@@ -1,6 +1,6 @@
 import { NhostClient, NhostProvider } from '@nhost/react';
 import { NhostApolloProvider } from '@nhost/react-apollo';
-import { getSecureStorageInstance, isSecureStorageInitialized, UiProvider } from '@prevezic/react-native';
+import { getSecureStorageInstance, isSecureStorageInitialized, UiProvider } from '@ralens/react-native';
 import { Slot, SplashScreen, withLayoutContext } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
