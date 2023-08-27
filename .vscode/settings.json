@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": false
+  },
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "i18n-ally.enabledFrameworks": [
+    "react",
+    "i18next"
+  ],
+  "i18n-ally.localesPaths": [
+    "apps/mobile/src/core/i18n"
+  ],
+  "i18n-ally.keystyle": "nested"
+}

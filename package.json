@@ -1,0 +1,31 @@
+{
+  "name": "@prevezic/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Prevezic is a private photo sharing platform",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pchmn/prevezic.git"
+  },
+  "author": "pchmn",
+  "license": "MIT",
+  "homepage": "https://github.com/pchmn/prevezic",
+  "scripts": {
+    "dev": "turbo dev",
+    "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
+    "lint": "eslint --cache --fix .",
+    "clean": "npkill",
+    "list-mismatches": "syncpack list-mismatches --types dev,prod,peer",
+    "fix-mismatches": "syncpack fix-mismatches --types dev,prod,peer"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@commitlint/prompt-cli": "^17.0.3",
+    "dotenv-cli": "^7.2.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^11.2.3",
+    "syncpack": "^10.7.3",
+    "turbo": "^1.10.12"
+  }
+}

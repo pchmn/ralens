@@ -1,0 +1,15 @@
+{
+  "name": "@prevezic/core",
+  "version": "0.0.0",
+  "private": true,
+  "author": "pchmn",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "devDependencies": {
+    "@nhost/nhost-js": "^2.2.13",
+    "@prevezic/eslint-config": "workspace:*",
+    "@prevezic/tsconfig": "workspace:*",
+    "typescript": "^5.1.6"
+  }
+}

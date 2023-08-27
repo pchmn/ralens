@@ -1,0 +1,18 @@
+{
+  "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "outputs": ["dist/**", "build/**", ".expo/**", "node_modules/.cache/metro/**"],
+      "dependsOn": ["^build"]
+    },
+    "@prevezic/functions#deploy:dev": {
+      "dependsOn": ["@prevezic/functions#build"]
+    },
+    "@prevezic/functions#deploy:prod": {
+      "dependsOn": ["@prevezic/functions#build"]
+    }
+  }
+}

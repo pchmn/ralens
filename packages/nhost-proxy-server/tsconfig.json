@@ -1,0 +1,8 @@
+{
+  "extends": "@prevezic/tsconfig/base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "baseUrl": ".",
+  },
+  "include": ["src"]
+}

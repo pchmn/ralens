@@ -1,0 +1,24 @@
+{
+  "name": "@prevezic/nhost-proxy-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "esr src/index.ts",
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node18.0 --outfile=dist/index.js"
+  },
+  "keywords": [],
+  "author": "pchmn",
+  "license": "MIT",
+  "devDependencies": {
+    "@prevezic/eslint-config": "workspace:*",
+    "@prevezic/tsconfig": "workspace:*",
+    "@types/http-proxy": "^1.17.11",
+    "@types/node": "^20.4.4",
+    "esbuild-runner": "^2.2.2",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "http-proxy": "^1.18.1"
+  }
+}
