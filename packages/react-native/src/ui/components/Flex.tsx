@@ -18,13 +18,24 @@ interface FlexProps {
   gap?: number | Spacing;
   height?: DimensionValue;
   width?: DimensionValue;
-  padding?: DimensionValue | Spacing;
-  paddingY?: DimensionValue | Spacing;
-  paddingX?: DimensionValue | Spacing;
-  backgroundColor?: string;
+  p?: DimensionValue | Spacing;
+  py?: DimensionValue | Spacing;
+  px?: DimensionValue | Spacing;
+  pr?: DimensionValue | Spacing;
+  pl?: DimensionValue | Spacing;
+  pt?: DimensionValue | Spacing;
+  pb?: DimensionValue | Spacing;
+  m?: DimensionValue | Spacing;
+  my?: DimensionValue | Spacing;
+  mx?: DimensionValue | Spacing;
+  mr?: DimensionValue | Spacing;
+  ml?: DimensionValue | Spacing;
+  bgColor?: string;
   flex?: number;
   borderRadius?: AnimatableNumericValue;
   position?: 'absolute' | 'relative';
+  display?: 'flex' | 'none';
+  alignSelf?: 'auto' | FlexAlignType;
   style?: ViewStyle;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
@@ -36,9 +47,19 @@ export function Flex({
   justify,
   wrap,
   gap,
-  padding,
-  paddingX,
-  paddingY,
+  p,
+  px,
+  py,
+  pr,
+  pl,
+  pt,
+  pb,
+  m,
+  mx,
+  my,
+  mr,
+  ml,
+  bgColor,
   style,
   onLayout,
   ...otherProps
@@ -51,9 +72,19 @@ export function Flex({
         alignItems: align,
         justifyContent: justify,
         flexWrap: wrap,
-        padding: spacingValue(padding),
-        paddingHorizontal: spacingValue(paddingX),
-        paddingVertical: spacingValue(paddingY),
+        padding: spacingValue(p),
+        paddingHorizontal: spacingValue(px),
+        paddingVertical: spacingValue(py),
+        paddingRight: spacingValue(pr),
+        paddingLeft: spacingValue(pl),
+        paddingTop: spacingValue(pt),
+        paddingBottom: spacingValue(pb),
+        margin: spacingValue(m),
+        marginHorizontal: spacingValue(mx),
+        marginVertical: spacingValue(my),
+        marginRight: spacingValue(mr),
+        marginLeft: spacingValue(ml),
+        backgroundColor: bgColor,
         gap: spacingValue(gap),
         ...style,
         ...otherProps,

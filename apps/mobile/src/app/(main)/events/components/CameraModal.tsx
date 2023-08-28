@@ -76,12 +76,12 @@ export function CameraView() {
     <Flex flex={1} justify="space-between">
       <Camera ref={ref} style={StyleSheet.absoluteFill} device={device} isActive={isFocused} photo enableZoomGesture />
       <Flex
-        // backgroundColor="#00000066"
+        // bgColor="#00000066"
         direction="row"
         align="center"
         justify="space-between"
-        paddingX="lg"
-        paddingY={32}
+        px="lg"
+        py={32}
         style={{ paddingTop: insets.top + 20 }}
       >
         <SwitchFlashMode onPress={toggleDevice} />

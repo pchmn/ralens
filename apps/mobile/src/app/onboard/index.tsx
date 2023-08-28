@@ -81,7 +81,7 @@ export default function OnBoard() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Flex flex={1} gap="lg" paddingY={40}>
+      <Flex flex={1} gap="lg" py={40}>
         <AnimatedPagerView
           ref={pagerViewRef}
           style={{ flex: 1 }}
@@ -90,13 +90,13 @@ export default function OnBoard() {
           onPageSelected={(event) => setCurrentPage(event.nativeEvent.position)}
         >
           {ONBOARD_DATA.map(({ image, title, description }, index) => (
-            <Flex key={index} flex={1} paddingX={40}>
+            <Flex key={index} flex={1} px={40}>
               <ExplanationView image={image} title={title} description={description} />
             </Flex>
           ))}
         </AnimatedPagerView>
 
-        <Flex direction="row" align="center" justify="space-between" paddingX={40}>
+        <Flex direction="row" align="center" justify="space-between" px={40}>
           <ExpandingDot
             data={ONBOARD_DATA}
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

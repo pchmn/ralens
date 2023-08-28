@@ -11,7 +11,7 @@ export function ExplanationView({
   description: string;
 }) {
   return (
-    <Flex flex={1} paddingY={60} justify="space-between">
+    <Flex flex={1} py={60} justify="space-between">
       <Flex flex={1} align="center" justify="center">
         {image}
       </Flex>

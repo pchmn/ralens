@@ -84,7 +84,7 @@ export function UiProvider({ children }: { children: React.ReactNode }) {
           translucent
         />
         <NavigationThemeProvider value={navigationTheme}>
-          <Flex flex={1} backgroundColor={paperTheme.colors.background}>
+          <Flex flex={1} bgColor={paperTheme.colors.background}>
             {children}
           </Flex>
         </NavigationThemeProvider>
