@@ -18,6 +18,8 @@ import {
 } from 'react-native-paper';
 import { MD3Theme, ThemeProp } from 'react-native-paper/lib/typescript/types';
 
+import { Flex } from './components/Flex';
+
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
   reactNavigationDark: NavigationDarkTheme,
@@ -81,7 +83,11 @@ export function UiProvider({ children }: { children: React.ReactNode }) {
           backgroundColor="transparent"
           translucent
         />
-        <NavigationThemeProvider value={navigationTheme}>{children}</NavigationThemeProvider>
+        <NavigationThemeProvider value={navigationTheme}>
+          <Flex flex={1} backgroundColor={paperTheme.colors.background}>
+            {children}
+          </Flex>
+        </NavigationThemeProvider>
       </PaperProvider>
     </UiProviderContext.Provider>
   );
