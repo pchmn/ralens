@@ -30,6 +30,8 @@ interface FlexProps {
   mx?: DimensionValue | Spacing;
   mr?: DimensionValue | Spacing;
   ml?: DimensionValue | Spacing;
+  mt?: DimensionValue | Spacing;
+  mb?: DimensionValue | Spacing;
   bgColor?: string;
   flex?: number;
   borderRadius?: AnimatableNumericValue;
@@ -59,6 +61,8 @@ export function Flex({
   my,
   mr,
   ml,
+  mt,
+  mb,
   bgColor,
   style,
   onLayout,
@@ -84,6 +88,8 @@ export function Flex({
         marginVertical: spacingValue(my),
         marginRight: spacingValue(mr),
         marginLeft: spacingValue(ml),
+        marginTop: spacingValue(mt),
+        marginBottom: spacingValue(mb),
         backgroundColor: bgColor,
         gap: spacingValue(gap),
         ...style,
