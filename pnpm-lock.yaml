@@ -65,6 +65,9 @@ importers:
       '@react-navigation/native':
         specifier: ^6.1.7
         version: 6.1.7(react-native@0.72.4)(react@18.2.0)
+      apollo3-cache-persist:
+        specifier: ^0.14.1
+        version: 0.14.1(@apollo/client@3.8.1)
       expo:
         specifier: ~49.0.8
         version: 49.0.8(@babel/core@7.20.2)
@@ -3820,6 +3823,14 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
+
+  /apollo3-cache-persist@0.14.1(@apollo/client@3.8.1):
+    resolution: {integrity: sha512-p/jNzN/MmSd0TmY7/ts0B3qi0SdQ3w9yNLQdKqB3GGb9xATUlAum2v4hSrTeWd/DZKK2Z7Xg5kFXTH6nNVnKSQ==}
+    peerDependencies:
+      '@apollo/client': ^3.2.5
+    dependencies:
+      '@apollo/client': 3.8.1(graphql-ws@5.14.0)(graphql@16.8.0)(react-dom@18.2.0)(react@18.2.0)
+    dev: false
 
   /appdirsjs@1.2.7:
     resolution: {integrity: sha512-Quji6+8kLBC3NnBeo14nPDq0+2jUs5s3/xEye+udFHumHhRk4M7aAMXp/PBJqkKYGuuyR9M/6Dq7d2AViiGmhw==}
