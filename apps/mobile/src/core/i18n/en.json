@@ -9,43 +9,12 @@
     "grantPermission": "Grant permission",
     "openSettings": "Open settings"
   },
-  "welcomeScreen": {
-    "explalantionView": {
-      "title": "Who is that?",
-      "description": "Communicate anonymously with unknown users around you"
-    },
-    "locationPermissionView": {
-      "title": "Location permission",
-      "description": "We need your location to find people around you",
-      "grantLocation": "Allow location",
-      "dialog": {
-        "title": "Location permission",
-        "description": "Kuzpot needs your location to work.\nYou can change this permission in the app settings."
-      }
-    },
-    "notificationsPermissionView": {
-      "title": "Notifications permission",
-      "description": "Activate notifications to know when someone sends you a message",
-      "grantNotifications": "Allow notifications",
-      "dialog": {
-        "title": "Notifications permission",
-        "description": "If you want to receive notifications, you need to grant Kuzpot the permission to send them.\nYou can change this permission in the app settings."
-      }
-    }
-  },
-  "homeScreen": {
-    "userDetails": {
-      "distance": "{{distance}} away",
-      "online": "Online",
-      "offline": "Offline",
-      "receivedCount_zero": "0 received",
-      "receivedCount_one": "1 received (~{{averageDistance}})",
-      "receivedCount_other": "{{count}} received (~{{averageDistance}})",
-      "sentCount_zero": "0 sent",
-      "sentCount_one": "1 sent (~{{averageDistance}})",
-      "sentCount_other": "{{count}} sent (~{{averageDistance}})",
-      "messagesReceived": "Messages received",
-      "chooseMessage": "Choose a message"
+  "onboard": {
+    "welcome": {
+      "title": "Welcome to Ralens",
+      "content": "The Safe Network is a new, decentralised and secure way to access the world wide web. It is owned and controlled by everyone who uses it and is powered by the unused resources of its users.",
+      "description": "Ralens brings the charm of film rolls directly to your phone, letting you experience it all with just a touch.",
+      "getStarted": "Get started"
     }
   }
 }

@@ -9,43 +9,12 @@
     "grantPermission": "Autoriser la permission",
     "openSettings": "Ouvrir les paramètres"
   },
-  "welcomeScreen": {
-    "explalantionView": {
-      "title": "Kuzpot ?",
-      "description": "Trouve des personnes autour de toi et envoie leur des messages de manière anonyme"
-    },
-    "locationPermissionView": {
-      "title": "Localisation",
-      "description": "Nous avons besoin de ta localisation pour trouver des personnes autour de toi",
-      "grantLocation": "Autoriser la localisation",
-      "dialog": {
-        "title": "Autoriser la localisation",
-        "description": "Kuzpot a besoin de la localisation pour fonctionner.\nTu peux l'autoriser dans les paramètres de l'application."
-      }
-    },
-    "notificationsPermissionView": {
-      "title": "Notifications",
-      "description": "Active les notifications pour être alerté quand quelqu'un t'envoie un message",
-      "grantNotifications": "Autoriser les notifications",
-      "dialog": {
-        "title": "Autoriser les notifications",
-        "description": "Si tu veux être alerté quand quelqu'un t'envoie un message, tu dois autoriser les notifications.\nTu peux les autoriser dans les paramètres de l'application."
-      }
-    }
-  },
-  "homeScreen": {
-    "userDetails": {
-      "distance": "À {{distance}}",
-      "online": "En ligne",
-      "offline": "Hors ligne",
-      "receivedCount_zero": "0 reçu",
-      "receivedCount_one": "1 reçu (~{{averageDistance}})",
-      "receivedCount_other": "{{count}} reçus (~{{averageDistance}})",
-      "sentCount_zero": "0 envoyé",
-      "sentCount_one": "1 envoyé (~{{averageDistance}})",
-      "sentCount_other": "{{count}} envoyés (~{{averageDistance}})",
-      "messagesReceived": "Messages reçus",
-      "chooseMessage": "Choisir un message"
+  "onboard": {
+    "welcome": {
+      "title": "Bienvenue dans Ralens",
+      "content": "The Safe Network is a new, decentralised and secure way to access the world wide web. It is owned and controlled by everyone who uses it and is powered by the unused resources of its users.",
+      "description": "Ralens vous fait revivre l'essence des pellicules photos, à portée de main sur votre téléphone.",
+      "getStarted": "Commencer"
     }
   }
 }
