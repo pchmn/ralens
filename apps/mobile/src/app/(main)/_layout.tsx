@@ -1,5 +1,8 @@
 /* eslint-disable react/prop-types */
+import { useAppTheme } from '@ralens/react-native';
+import { setBackgroundColorAsync as setNavigationBarBackgroundColorAsync } from 'expo-navigation-bar';
 import { withLayoutContext } from 'expo-router';
+import { useEffect } from 'react';
 import {
   createMaterialBottomTabNavigator,
   MaterialBottomTabNavigationOptions,
@@ -23,11 +26,11 @@ export const unstable_settings = {
 };
 
 export default function MainLayout() {
-  // const router = useRouter();
+  const theme = useAppTheme();
 
-  // const goToSiteMap = () => {
-  //   router.push('_sitemap');
-  // };
+  useEffect(() => {
+    setNavigationBarBackgroundColorAsync(theme.colors.elevation.level2);
+  }, [theme]);
 
   return (
     <>

@@ -42,9 +42,9 @@ export function Welcome({ onContine }: { onContine: () => void }) {
           <CameraImage height={cameraImageSize} width={cameraImageSize} />
         </Flex>
       </Flex>
-      <Flex justify="center" px={40} pt={windowHeight < 700 ? 10 : py / 1.5} flex={1}>
+      <Flex justify="center" px={40} pt={py / 1.5} flex={1}>
         <Flex gap={20}>
-          <Text variant={windowHeight < 700 ? 'bodyLarge' : 'headlineMedium'}>{t('onboard.welcome.title')}</Text>
+          <Text variant={windowHeight < 700 ? 'headlineSmall' : 'headlineMedium'}>{t('onboard.welcome.title')}</Text>
           <Text variant={windowHeight < 700 ? 'bodySmall' : 'bodyMedium'} style={{ opacity: 0.75, lineHeight: 25 }}>
             {t('onboard.welcome.description')}
           </Text>
