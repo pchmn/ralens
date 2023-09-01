@@ -9,7 +9,7 @@ export function SvgIcon({ size = 24, type = 'filled', children, ...props }: SvgI
   return (
     <Svg
       {...props}
-      fill={type === 'filled' ? 'currentColor' : undefined}
+      fill={type === 'filled' ? 'currentColor' : 'none'}
       stroke={type === 'outline' ? 'currentColor' : undefined}
       width={size}
       height={size}

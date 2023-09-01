@@ -4,8 +4,6 @@ import * as Sentry from 'sentry-expo';
 
 import { useRegisterDevice } from './useRegisterDevice';
 
-let isInit = false;
-
 export function useAuth() {
   const { register } = useRegisterDevice();
 
@@ -37,7 +35,7 @@ export function useAuth() {
   }, [initUser, userId]);
 
   useEffect(() => {
-    if (!isInit && !authLoading && !isAuthenticated && !userId) {
+    if (!authLoading && !isAuthenticated && !userId) {
       console.log('useEffect init user signInAnonymous');
       signInAnonymous()
         .then((user) => {
@@ -48,7 +46,6 @@ export function useAuth() {
           console.error('nhost err', err);
           setIsLoading(false);
         });
-      isInit = true;
     }
   }, [authLoading, isAuthenticated, signInAnonymous, userId]);
 

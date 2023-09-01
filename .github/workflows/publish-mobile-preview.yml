@@ -1,0 +1,67 @@
+name: Publish Mobile App Preview
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - "apps/mobile/**"
+      - "packages/react-native/**"
+      - "packages/core/**"
+      - ".github/workflows/publish-mobile-preview.yml"
+
+jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRun: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: tj-actions/changed-files@v37
+        id: filter
+        with:
+          since_last_remote_commit: true
+          files: |
+            apps/mobile/**
+            packages/react-native/**
+            packages/core/**
+            .github/workflows/publish-mobile-preview.yml
+
+  publish:
+    name: Publish Mobile App Preview
+    needs: changes
+    if: needs.changes.outputs.shouldRun == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
+          metro-cache: true
+
+      - name: 🏗 Setup expo
+        uses: expo/expo-github-action@v7
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 💬 Get eas update message
+        id: update-message
+        run: echo "value=$(git show -s --format=%s)" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Publish eas update
+        working-directory: apps/mobile
+        run: eas update --branch ${{ github.head_ref }} --message "${{ steps.update-message.outputs.value }}"
+        env:
+          EXPO_PUBLIC_NHOST_AUTH_URL: ${{ secrets.NHOST_AUTH_URL_DEV }}
+          EXPO_PUBLIC_NHOST_GRAPHQL_URL: ${{ secrets.NHOST_GRAPHQL_URL_DEV }}
+          EXPO_PUBLIC_NHOST_STORAGE_URL: ${{ secrets.NHOST_STORAGE_URL_DEV }}
+          EXPO_PUBLIC_NHOST_FUNCTIONS_URL: ${{ secrets.NHOST_FUNCTIONS_URL_DEV }}

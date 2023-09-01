@@ -1,6 +1,8 @@
+import { InMemoryCache } from '@apollo/client';
 import { NhostClient, NhostProvider } from '@nhost/react';
 import { NhostApolloProvider } from '@nhost/react-apollo';
-import { getSecureStorageInstance, isSecureStorageInitialized, UiProvider } from '@ralens/react-native';
+import { getSecureStorageInstance, UiProvider } from '@ralens/react-native';
+import { MMKVWrapper, persistCache } from 'apollo3-cache-persist';
 import { Slot, SplashScreen, withLayoutContext } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -31,40 +33,46 @@ const nhostParams = {
   storageUrl: process.env.EXPO_PUBLIC_NHOST_STORAGE_URL,
   functionsUrl: process.env.EXPO_PUBLIC_NHOST_FUNCTIONS_URL,
 };
-let nhost: NhostClient;
 
 export default function RootLayout() {
-  const [isReady, setIsReady] = useState(isSecureStorageInitialized());
+  const [nhostClient, setNhostClient] = useState<NhostClient>();
+  const [cache] = useState<InMemoryCache>(new InMemoryCache());
 
   useEffect(() => {
-    if (!isSecureStorageInitialized()) {
-      getSecureStorageInstance()
-        .then((storage) => {
-          nhost = new NhostClient({
-            ...nhostParams,
-            clientStorage: {
-              setItem: storage.set.bind(storage),
-              getItem: storage.getString.bind(storage),
-              removeItem: storage.delete.bind(storage),
-            },
-            clientStorageType: 'react-native',
-          });
-          setIsReady(true);
-        })
-        .catch((err) => {
-          console.error('error initializing secure storage', err);
-          Sentry.Native.captureException(err);
-        });
-    }
-  }, []);
+    async function init() {
+      const storage = await getSecureStorageInstance();
 
-  if (!isReady) {
+      await persistCache({
+        cache,
+        storage: new MMKVWrapper(storage),
+      });
+
+      setNhostClient(
+        new NhostClient({
+          ...nhostParams,
+          clientStorage: {
+            setItem: storage.set.bind(storage),
+            getItem: storage.getString.bind(storage),
+            removeItem: storage.delete.bind(storage),
+          },
+          clientStorageType: 'react-native',
+        })
+      );
+    }
+
+    init().catch((err) => {
+      console.error('error initializing secure storage', err);
+      Sentry.Native.captureException(err);
+    });
+  }, [cache]);
+
+  if (!nhostClient) {
     return null;
   }
 
   return (
-    <NhostProvider nhost={nhost}>
-      <NhostApolloProvider nhost={nhost}>
+    <NhostProvider nhost={nhostClient}>
+      <NhostApolloProvider nhost={nhostClient} cache={cache}>
         <UiProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <AuthProvider>
