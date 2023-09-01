@@ -1,0 +1,73 @@
+name: Setup Node
+description: Setup Node and pnpm
+
+inputs:
+  node-version:
+    description: Version of Node to use
+    default: 18.x
+
+  pnpm-version:
+    description: Version of pnpm to use
+    default: 7.x
+
+  keep-npmrc:
+    description: Keep the .npmrc file in the workspace
+    default: 'true'
+
+  install:
+    description: Run pnpm install
+    default: 'false'
+
+  metro-cache:
+    description: Enable Metro cache
+    default: 'false'
+
+  turbo-cache:
+    description: Enable turbo cache
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+
+    - if: ${{ inputs.keep-npmrc == 'false' }}
+      name: Remove .npmrc
+      shell: bash
+      run: rm .npmrc
+
+    - if: ${{ inputs.install == 'true' }}
+      name: Install dependencies
+      shell: bash
+      run: pnpm install
+
+    - if: ${{ inputs.metro-cache == 'true' }}
+      name: Restore Metro cache
+      uses: actions/cache@v3
+      with:
+        path: apps/mobile/node_modules/.cache/metro
+        key: ${{ runner.os }}-metro-cache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-metro-cache-${{ github.ref }}
+          ${{ runner.os }}-metro-cache-${{ github.base_ref }}
+          ${{ runner.os }}-metro-cache-
+
+    - if: ${{ inputs.turbo-cache == 'true' }}
+      name: Restore Turbo cache
+      uses: actions/cache@v3
+      with:
+        path: node_modules/.cache/turbo
+        key: ${{ runner.os }}-turbo-cache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-cache-${{ github.ref }}
+          ${{ runner.os }}-turbo-cache-${{ github.base_ref }}
+          ${{ runner.os }}-turbo-cache-

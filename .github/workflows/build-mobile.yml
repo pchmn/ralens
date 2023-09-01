@@ -1,0 +1,54 @@
+
+
+name: Build Mobile App
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - android
+          - ios
+      profile:
+        description: EAS build profile
+        type: choice
+        required: true
+        default: development
+        options:
+          - development
+          - preview
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
+
+      - name: 🏗 Setup expo
+        uses: expo/expo-github-action@v7
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🏗 Set nhost urls
+        working-directory: apps/mobile
+        run: |
+          sed -i 's@<NHOST_AUTH_URL_DEV>@${{ secrets.NHOST_AUTH_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_GRAPHQL_URL_DEV>@${{ secrets.NHOST_GRAPHQL_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_STORAGE_URL_DEV>@${{ secrets.NHOST_STORAGE_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_FUNCTIONS_URL_DEV>@${{ secrets.NHOST_FUNCTIONS_URL_DEV }}@g' eas.json
+
+      - name: 🔨 EAS build
+        working-directory: apps/mobile
+        run: eas build --non-interactive --no-wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}
