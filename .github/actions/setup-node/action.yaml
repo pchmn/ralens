@@ -8,7 +8,7 @@ inputs:
 
   pnpm-version:
     description: Version of pnpm to use
-    default: 7.x
+    default: 8.x
 
   keep-npmrc:
     description: Keep the .npmrc file in the workspace
