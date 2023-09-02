@@ -2,7 +2,7 @@ import { Flex } from '@ralens/react-native';
 import { useState } from 'react';
 import { Button } from 'react-native-paper';
 
-import { CameraModal } from './components/CameraModal';
+import { CameraModal } from '@/shared/components';
 
 export default function Events() {
   const [opened, setOpened] = useState(false);

@@ -17,7 +17,8 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Camera, CameraDevice, useCameraDevices } from 'react-native-vision-camera';
 
-import { FlashAutoIcon, FlashOffIcon, FlashOnIcon, SwitchIcon } from '@/shared/components';
+import { FlashAutoIcon, FlashOffIcon, FlashOnIcon, SwitchIcon } from '@/shared/components/icons';
+import { PermissionType, usePermission } from '@/shared/hooks';
 
 function useCamera() {
   const devices = useCameraDevices();
@@ -53,23 +54,23 @@ export function CameraModal({ opened, onClose }: { opened: boolean; onClose: () 
 export function CameraView() {
   const { device, toggleDevice, ref } = useCamera();
   // const [imagePath, setImagePath] = useState<string | undefined>();
+  const { status, request } = usePermission(PermissionType.CAMERA);
 
   const insets = useSafeAreaInsets();
   // const { width } = useSafeAreaFrame();
 
   const isFocused = useIsFocused();
 
-  const requestPermission = async () => {
-    const newCameraPermission = await Camera.requestCameraPermission();
-    console.log('newCameraPermission', newCameraPermission);
-  };
-
-  if (!device) {
+  if (!status?.granted) {
     return (
       <Flex flex={1} align="center" justify="center">
-        <Button onPress={requestPermission}>Request permission</Button>
+        <Button onPress={request}>Request permission</Button>
       </Flex>
     );
+  }
+
+  if (!device) {
+    return null;
   }
 
   return (
