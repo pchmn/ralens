@@ -34,7 +34,7 @@ export default function MainLayout() {
 
   return (
     <>
-      <MaterialBottomTabs>
+      <MaterialBottomTabs sceneAnimationEnabled sceneAnimationType="shifting" theme={theme}>
         <MaterialBottomTabs.Screen
           name="films/index"
           options={{
