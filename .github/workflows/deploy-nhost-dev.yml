@@ -2,6 +2,12 @@ name: Deploy Nhost Dev
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force deploy'
+        required: false
+        type: boolean
+        default: false
   pull_request:
     types:
       - opened
@@ -29,7 +35,7 @@ jobs:
   deploy:
     name: 🚀 Deploy to Nhost
     needs: changes
-    if: needs.changes.outputs.shouldRun == 'true'
+    if: needs.changes.outputs.shouldRun == 'true' || inputs.force == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
