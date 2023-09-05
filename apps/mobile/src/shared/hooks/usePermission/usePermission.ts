@@ -1,3 +1,4 @@
+import { openSettings } from 'expo-linking';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
@@ -20,9 +21,8 @@ export function usePermission(type: PermissionType) {
   const getStatus = useCallback(async () => {
     const result = await getPermissionModule(type).getStatus();
     setStatus((prev) => (JSON.stringify(prev) !== JSON.stringify(result) ? result : prev));
-    console.log(type, status);
     return result;
-  }, [status, type]);
+  }, [type]);
 
   const request = async () => {
     const result = await getPermissionModule(type).request();
@@ -44,5 +44,5 @@ export function usePermission(type: PermissionType) {
     };
   }, [getStatus]);
 
-  return { status, request, getStatus };
+  return { status, request, getStatus, openSettings };
 }

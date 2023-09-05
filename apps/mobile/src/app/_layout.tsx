@@ -1,9 +1,9 @@
 import { InMemoryCache } from '@apollo/client';
 import { NhostClient, NhostProvider } from '@nhost/react';
 import { NhostApolloProvider } from '@nhost/react-apollo';
-import { getSecureStorageInstance, UiProvider } from '@ralens/react-native';
+import { getSecureStorageInstance, UiProvider, useAppTheme } from '@ralens/react-native';
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist';
-import { Slot, SplashScreen, withLayoutContext } from 'expo-router';
+import { SplashScreen, Stack, withLayoutContext } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import createMaterialBottomTabNavigator from '@/shared/utils/materialBottomNav/createMaterialBottomTabNavigator';
@@ -77,12 +77,43 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <AuthProvider>
               <OnBoardProvider>
-                <Slot />
+                <Content />
               </OnBoardProvider>
             </AuthProvider>
           </GestureHandlerRootView>
         </UiProvider>
       </NhostApolloProvider>
     </NhostProvider>
+  );
+}
+
+function Content() {
+  const theme = useAppTheme();
+
+  return (
+    <Stack>
+      <Stack.Screen
+        name="(main)"
+        options={{
+          headerShown: false,
+          navigationBarColor: theme.colors.elevation.level2,
+          orientation: 'portrait',
+        }}
+      />
+      <Stack.Screen
+        name="camera/index"
+        options={{
+          animation: 'fade_from_bottom',
+          presentation: 'fullScreenModal',
+          headerShown: false,
+          orientation: 'portrait',
+
+          navigationBarColor: '#000',
+          contentStyle: {
+            backgroundColor: '#000',
+          },
+        }}
+      />
+    </Stack>
   );
 }

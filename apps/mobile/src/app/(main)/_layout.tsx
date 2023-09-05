@@ -79,3 +79,23 @@ export default function MainLayout() {
     </>
   );
 }
+
+// const Touchable = ({ route, style, children, borderless, centered, rippleColor, ...rest }: any) => {
+//   console.log('route', route);
+//   return route.name === 'camera/index' ? null : TouchableRipple.supported ? (
+//     <TouchableRipple
+//       {...rest}
+//       disabled={rest.disabled || undefined}
+//       borderless={borderless}
+//       centered={centered}
+//       rippleColor={rippleColor}
+//       style={style}
+//     >
+//       {children}
+//     </TouchableRipple>
+//   ) : (
+//     <TouchableWithoutFeedback {...rest}>
+//       <View style={style}>{children}</View>
+//     </TouchableWithoutFeedback>
+//   );
+// };

@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -86,6 +82,9 @@ importers:
       expo-device:
         specifier: ~5.4.0
         version: 5.4.0(expo@49.0.8)
+      expo-intent-launcher:
+        specifier: ~10.7.0
+        version: 10.7.0(expo@49.0.8)
       expo-linking:
         specifier: ~5.0.2
         version: 5.0.2(expo@49.0.8)
@@ -95,6 +94,9 @@ importers:
       expo-router:
         specifier: 2.0.0
         version: 2.0.0(expo-constants@14.4.2)(expo-linking@5.0.2)(expo-status-bar@1.6.0)(expo@49.0.8)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native-safe-area-context@4.6.3)(react-native-screens@3.22.1)(react-native@0.72.4)(react@18.2.0)
+      expo-sensors:
+        specifier: ~12.3.0
+        version: 12.3.0(expo@49.0.8)
       expo-splash-screen:
         specifier: ~0.20.5
         version: 0.20.5(expo@49.0.8)
@@ -146,6 +148,9 @@ importers:
       react-native-screens:
         specifier: ~3.22.0
         version: 3.22.1(react-native@0.72.4)(react@18.2.0)
+      react-native-sensors:
+        specifier: ^7.3.6
+        version: 7.3.6(react-native@0.72.4)
       react-native-svg:
         specifier: 13.9.0
         version: 13.9.0(react-native@0.72.4)(react@18.2.0)
@@ -179,7 +184,7 @@ importers:
     devDependencies:
       '@nhost/nhost-js':
         specifier: ^2.2.13
-        version: 2.2.13
+        version: 2.2.13(graphql@16.8.0)
       '@ralens/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -2358,7 +2363,6 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.0
-    dev: false
 
   /@hapi/hoek@9.3.0:
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -2502,17 +2506,6 @@ packages:
       graphql-ws: 5.14.0(graphql@16.7.1)
     dev: false
 
-  /@nhost/graphql-js@0.1.4:
-    resolution: {integrity: sha512-IPHuGOf4iQrFsxG7Rh5jCCZzPCN9JkvldFww4Fz1lCVi9ZQNEaGaawIP5gBuBHeYIuALeaK1wVYKPc7vJ/euCA==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@15.8.0)
-      isomorphic-unfetch: 3.1.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@nhost/graphql-js@0.1.4(graphql@16.8.0):
     resolution: {integrity: sha512-IPHuGOf4iQrFsxG7Rh5jCCZzPCN9JkvldFww4Fz1lCVi9ZQNEaGaawIP5gBuBHeYIuALeaK1wVYKPc7vJ/euCA==}
     peerDependencies:
@@ -2523,7 +2516,6 @@ packages:
       isomorphic-unfetch: 3.1.0
     transitivePeerDependencies:
       - encoding
-    dev: false
 
   /@nhost/hasura-auth-js@2.1.7:
     resolution: {integrity: sha512-dbi8zrmuE3xSlA7WMNyrZzVPLKYSBUlKtUjob+axhts0+4TsqsB7NvdLXrhM0fYjRY5SFUtN2JLs+EWDGKAoLQ==}
@@ -2545,19 +2537,6 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@nhost/nhost-js@2.2.13:
-    resolution: {integrity: sha512-HU9eOpkVBGGMHsRThGyl654Y9W8bksSEnyEvDojUg76+3ngOn2ebrasXR/94YoR206soEzq3v4b0OKmn/1jlnQ==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@nhost/graphql-js': 0.1.4
-      '@nhost/hasura-auth-js': 2.1.7
-      '@nhost/hasura-storage-js': 2.2.2
-      isomorphic-unfetch: 3.1.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@nhost/nhost-js@2.2.13(graphql@16.8.0):
     resolution: {integrity: sha512-HU9eOpkVBGGMHsRThGyl654Y9W8bksSEnyEvDojUg76+3ngOn2ebrasXR/94YoR206soEzq3v4b0OKmn/1jlnQ==}
     peerDependencies:
@@ -2570,7 +2549,6 @@ packages:
       isomorphic-unfetch: 3.1.0
     transitivePeerDependencies:
       - encoding
-    dev: false
 
   /@nhost/react-apollo@5.0.32(@apollo/client@3.8.1)(@nhost/react@2.0.28)(graphql@16.8.0)(react@18.2.0):
     resolution: {integrity: sha512-DVzakIcVzIdlV4VJK+ZPSimrdicFWH/O6j5hfqhC3OGM5j1udpayy/6iBhUErJgFGhT6dzjUpSKxVqhHu6sC9Q==}
@@ -5243,6 +5221,14 @@ packages:
       - react-dom
     dev: false
 
+  /expo-intent-launcher@10.7.0(expo@49.0.8):
+    resolution: {integrity: sha512-vzZQMpfwa+CtiStkppcvV8lcMgVj13Hej6ENcaSFM7ZHluCA3vjjhpoDMP6I/FAF2SwsEscxhkT2CWVP0VNdTw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.8(@babel/core@7.20.2)
+    dev: false
+
   /expo-json-utils@0.7.1:
     resolution: {integrity: sha512-L0lyH8diXQtV0q5BLbFlcoxTqPF5im79xDHPhybB0j36xYdm65hjwRJ4yMrPIN5lR18hj48FUZeONiDHRyEvIg==}
     dev: false
@@ -5352,6 +5338,15 @@ packages:
       - react-dom
       - react-native
       - supports-color
+    dev: false
+
+  /expo-sensors@12.3.0(expo@49.0.8):
+    resolution: {integrity: sha512-KYL/WsJNJGTHRzpeCblPleuqaoCCHbIEQHg3NiRVVG1ismlGnisCPI6OBWYVZhfCJ0FjGvK0Z311Ac/KY8JSpA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.8(@babel/core@7.20.2)
+      invariant: 2.2.4
     dev: false
 
   /expo-splash-screen@0.20.5(expo@49.0.8):
@@ -5952,7 +5947,6 @@ packages:
   /graphql@16.8.0:
     resolution: {integrity: sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: false
 
   /hard-rejection@2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==}
@@ -8292,6 +8286,16 @@ packages:
       warn-once: 0.1.1
     dev: false
 
+  /react-native-sensors@7.3.6(react-native@0.72.4):
+    resolution: {integrity: sha512-h3ispHU6BqhVsMMBIMfJWdwoqHNoSae1wv2RNl2hVOoV1rbFuSbQluQsuZirva6uRDaZVeVwaE5th3HIf+9ykQ==}
+    peerDependencies:
+      prop-types: ^15.6.0
+      react-native: '>=0.39.0'
+    dependencies:
+      react-native: 0.72.4(@babel/core@7.20.2)(react@18.2.0)
+      rxjs: 7.5.7
+    dev: false
+
   /react-native-svg@13.9.0(react-native@0.72.4)(react@18.2.0):
     resolution: {integrity: sha512-Ey18POH0dA0ob/QiwCBVrxIiwflhYuw0P0hBlOHeY4J5cdbs8ngdKHeWC/Kt9+ryP6fNoEQ1PUgPYw2Bs/rp5Q==}
     peerDependencies:
@@ -8645,7 +8649,6 @@ packages:
     resolution: {integrity: sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==}
     dependencies:
       tslib: 2.6.2
-    dev: true
 
   /safe-buffer@5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
@@ -9989,3 +9992,7 @@ packages:
 
   /zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
