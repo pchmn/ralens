@@ -3,6 +3,8 @@ import { Platform } from 'react-native';
 import { gravity, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
 import { Camera, CameraDevice, CameraDeviceFormat, sortFormats, useCameraDevices } from 'react-native-vision-camera';
 
+export type FlashMode = 'on' | 'off' | 'auto';
+
 setUpdateIntervalForType(SensorTypes.gravity, 1000);
 
 export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
@@ -52,8 +54,9 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
   const photoFormat = useMemo(() => {
     const format = availableRatios?.[`photo-${ratio}`]?.[0];
     if (format && Platform.OS === 'android') {
-      [format.photoHeight, format.photoWidth] = [format.photoWidth, format.photoHeight];
-      [format.videoHeight, format.videoWidth] = [format.videoWidth, format.videoHeight];
+      return { ...format, photoHeight: format.photoWidth, photoWidth: format.photoHeight };
+      // [format.photoHeight, format.photoWidth] = [format.photoWidth, format.photoHeight];
+      // [format.videoHeight, format.videoWidth] = [format.videoWidth, format.videoHeight];
     }
     return format;
   }, [availableRatios, ratio]);
@@ -61,8 +64,9 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
   const videoFormat = useMemo(() => {
     const format = availableRatios?.[`video-${ratio}`]?.[0];
     if (format && Platform.OS === 'android') {
-      [format.photoHeight, format.photoWidth] = [format.photoWidth, format.photoHeight];
-      [format.videoHeight, format.videoWidth] = [format.videoWidth, format.videoHeight];
+      return { ...format, videoHeight: format.videoWidth, videoWidth: format.videoHeight };
+      // [format.photoHeight, format.photoWidth] = [format.photoWidth, format.photoHeight];
+      // [format.videoHeight, format.videoWidth] = [format.videoWidth, format.videoHeight];
     }
     return format;
   }, [availableRatios, ratio]);
@@ -75,8 +79,8 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
     setDevice((prev) => (prev === devices.back ? devices.front : devices.back));
   };
 
-  const takePhoto = async () => {
-    const photo = await ref.current?.takePhoto({ qualityPrioritization: 'quality', flash: 'auto' });
+  const takePhoto = async (flash: FlashMode) => {
+    const photo = await ref.current?.takePhoto({ qualityPrioritization: 'quality', flash });
     return photo;
   };
 

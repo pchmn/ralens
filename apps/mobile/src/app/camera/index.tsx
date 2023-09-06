@@ -1,5 +1,5 @@
+import { Flex } from '@ralens/react-native';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Camera } from './Camera/Camera';
 
@@ -11,8 +11,8 @@ export default function CameraModal() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <Flex flex={1}>
       <Camera onClose={() => router.replace('../')} />
-    </SafeAreaView>
+    </Flex>
   );
 }

@@ -7,6 +7,7 @@ type TextProps = React.ComponentProps<typeof PaperText> & {
   fontSize?: number;
   textAlign?: 'center' | 'auto' | 'left' | 'right' | 'justify';
   fontWeight?: 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
+  uppercase?: boolean;
 };
 
 export function Text({
@@ -16,11 +17,17 @@ export function Text({
   textAlign,
   fontWeight,
   style: otherStyle,
+  uppercase,
   ...otherProps
 }: TextProps) {
-  let style: Partial<StyleProp<TextStyle>> = { textAlign, fontWeight };
+  console.log('color', color);
+  let style: Partial<StyleProp<TextStyle>> = {
+    textAlign,
+    fontWeight,
+    textTransform: uppercase ? 'uppercase' : undefined,
+  };
   if (color) {
-    style = { color };
+    style = { ...style, color };
   }
   if (fontSize) {
     style = { ...style, fontSize };

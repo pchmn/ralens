@@ -1,3 +1,4 @@
+export * from './CrossIcon';
 export * from './FilmIcon';
 export * from './FilmOutlineIcon';
 export * from './FlashAutoIcon';
