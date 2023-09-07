@@ -1,8 +1,8 @@
-import { Flex, Text, TouchableScale, useAppTheme } from '@ralens/react-native';
+import { Flex, TouchableScale, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
   Extrapolate,
@@ -16,7 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 
 import { CrossIcon, FlashAutoIcon, FlashOffIcon, FlashOnIcon, SwitchIcon } from '@/shared/components';
@@ -25,7 +25,6 @@ import { PermissionType, usePermission } from '@/shared/hooks';
 import { FlashMode, useCamera } from './useCamera';
 
 const RATIO_16_9 = 16 / 9;
-const { width, height } = Dimensions.get('window');
 
 export function Camera({ onClose }: { onClose: () => void }) {
   const { device, toggleDevice, ref, takePhoto, photoFormat, orientation } = useCamera();
@@ -40,10 +39,13 @@ export function Camera({ onClose }: { onClose: () => void }) {
 
   const isFocused = useIsFocused();
 
-  // const { width } = useSafeAreaFrame();
-  const { top } = useSafeAreaInsets();
-  const cameraHeight = Math.min(width * RATIO_16_9, height);
-  const isFullScreen = cameraHeight === height;
+  const { height, width } = useSafeAreaFrame();
+  const { top, bottom } = useSafeAreaInsets();
+
+  const cameraHeight = Math.min(width * RATIO_16_9, height - bottom);
+  const isFullScreen = cameraHeight + top > height - bottom;
+  // const canExcludeCaptureMode = cameraHeight + top + 48 <= height - bottom;
+  const hasToContainCaotureMode = isFullScreen || cameraHeight + top + 48 > height - bottom;
 
   if (!status?.granted && status?.canAskAgain) {
     request();
@@ -80,7 +82,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
         <Flex direction="row" justify="space-between" p="lg">
           <CloseButton onPress={onClose} />
         </Flex>
-        <Flex gap="xl">
+        <Flex gap="xl" pb={hasToContainCaotureMode ? undefined : 30}>
           <Flex direction="row" align="center" justify="space-between">
             <Flex direction="row" flex={1} justify="center">
               <SwitchFlashModeButton value={flashMode} onChange={setFlashMode} disabled={status?.granted !== true} />
@@ -93,10 +95,15 @@ export function Camera({ onClose }: { onClose: () => void }) {
               <SwitchDeviceButton onPress={toggleDevice} disabled={status?.granted !== true} />
             </Flex>
           </Flex>
-          <Flex direction="row" justify="center" pb="xl">
-            <CaptureModeCarousel onChange={setCaptureMode} />
-          </Flex>
+          {hasToContainCaotureMode && (
+            <Flex direction="row" justify="center" pb="xl">
+              <CaptureModeCarousel onChange={setCaptureMode} />
+            </Flex>
+          )}
         </Flex>
+      </Flex>
+      <Flex direction="row" justify="center" pt="sm">
+        <CaptureModeCarousel onChange={setCaptureMode} />
       </Flex>
     </Flex>
   );
@@ -259,13 +266,11 @@ function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => v
       onSnapToItem={(index) => onChange(data[index])}
       customAnimation={(value: number) => {
         'worklet';
-        const scale = interpolate(value, [-1, 0, 1], [0.8, 1, 0.8], Extrapolate.CLAMP);
-
-        const translate = interpolate(value, [0, 1], [0, 100]);
-
+        const scale = interpolate(value, [-1, 0, 1], [0.9, 1, 0.9], Extrapolate.CLAMP);
+        const translate = interpolate(value, [0, 1], [0, 80]);
         const backgroundColor = interpolateColor(value, [-1, 0, 1], ['transparent', '#00000008', 'transparent']);
 
-        const transform = {
+        return {
           transform: [
             { scale },
             {
@@ -273,31 +278,54 @@ function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => v
             },
             { perspective: 150 },
           ],
-        };
-
-        return {
-          ...transform,
           backgroundColor,
           width: 80,
           borderRadius: 40,
         };
       }}
-      renderItem={({ index, item }) => (
-        <TouchableRipple
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 40,
-          }}
+      renderItem={({ index, item, animationValue }) => (
+        <CaptureModeItem
+          animationValue={animationValue}
+          text={item}
           onPress={() => carouselRef.current?.scrollTo({ index, animated: true })}
-          borderless
-        >
-          <Text uppercase textAlign="center" color="#fff" fontWeight="700">
-            {item}
-          </Text>
-        </TouchableRipple>
+        />
       )}
     />
+  );
+}
+
+function CaptureModeItem({
+  animationValue,
+  text,
+  onPress,
+}: {
+  animationValue: Animated.SharedValue<number>;
+  text: string;
+  onPress?: () => void;
+}) {
+  const textAnimatedStyle = useAnimatedStyle(() => {
+    const color = interpolateColor(animationValue.value, [-1, 0, 1], ['#ffffff80', '#fff', '#ffffff80']);
+
+    return {
+      color,
+      textTransform: 'uppercase',
+
+      fontWeight: '600',
+    };
+  });
+
+  return (
+    <TouchableRipple
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+      }}
+      onPress={onPress}
+      borderless
+    >
+      <Animated.Text style={textAnimatedStyle}>{text}</Animated.Text>
+    </TouchableRipple>
   );
 }
