@@ -16,5 +16,9 @@
       "description": "Rediscover the magic of film photos through your smartphone.",
       "getStarted": "Get started"
     }
+  },
+  "camera": {
+    "photo": "Photo",
+    "video": "Video"
   }
 }

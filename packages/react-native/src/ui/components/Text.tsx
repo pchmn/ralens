@@ -20,7 +20,6 @@ export function Text({
   uppercase,
   ...otherProps
 }: TextProps) {
-  console.log('color', color);
   let style: Partial<StyleProp<TextStyle>> = {
     textAlign,
     fontWeight,

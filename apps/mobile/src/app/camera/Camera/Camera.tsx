@@ -1,16 +1,21 @@
 import { Flex, Text, TouchableScale, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
+  Extrapolate,
   FadeInDown,
   FadeOutUp,
+  interpolate,
+  interpolateColor,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 
@@ -31,10 +36,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
 
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
 
-  // const [captureMode, setCaptureMode] = useState<'photo' | 'video'>('photo');
-  // const [captureModeIndex, setCaptureModeIndex] = useState(0);
-
-  // const [isPhoto, setIsPhoto] = useState(true);
+  const [, setCaptureMode] = useState<CaptureMode>('photo');
 
   const isFocused = useIsFocused();
 
@@ -81,7 +83,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
         <Flex gap="xl">
           <Flex direction="row" align="center" justify="space-between">
             <Flex direction="row" flex={1} justify="center">
-              <SwitchFlashMode value={flashMode} onChange={setFlashMode} disabled={status?.granted !== true} />
+              <SwitchFlashModeButton value={flashMode} onChange={setFlashMode} disabled={status?.granted !== true} />
             </Flex>
             <TakePhotoButton
               onPress={async () => setMedia(await takePhoto(flashMode))}
@@ -92,28 +94,10 @@ export function Camera({ onClose }: { onClose: () => void }) {
             </Flex>
           </Flex>
           <Flex direction="row" justify="center" pb="xl">
-            {/* <Button mode="contained-tonal" compact>Photo</Button> */}
-            {/* <Text color="#fff" uppercase fontWeight="600" style={{ borderBottomColor: '#fff', borderBottomWidth: 1 }}>
-              Photo
-            </Text> */}
-            <Flex direction="row" gap="md">
-              <Text uppercase>Photo</Text>
-              <Text uppercase>Video</Text>
-            </Flex>
+            <CaptureModeCarousel onChange={setCaptureMode} />
           </Flex>
         </Flex>
-        {/* <Button onPress={onClose}>Close</Button> */}
-        {/* <Button
-          onPress={async () => {
-            const photo = await takePhoto();
-            setMedia(photo);
-          }}
-        >
-          Take photo - {media?.width}x{media?.height}
-        </Button> */}
-        {/* <Image source={{ uri: `file://${media?.path}` }} style={{ width: 100, height: 177.8 }} /> */}
       </Flex>
-      {/* <Button onPress={toggleDevice}>Toggle device</Button> */}
     </Flex>
   );
 }
@@ -129,7 +113,7 @@ function TakePhotoButton({ onPress, disabled }: { onPress: () => void; disabled?
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       style={{
-        borderRadius: 40,
+        borderRadius: 41,
         borderColor: '#ffffff80',
         borderWidth: 6,
         opacity: disabled ? 0.5 : 1,
@@ -175,7 +159,7 @@ function SwitchDeviceButton({ onPress, disabled }: { onPress: () => void; disabl
   );
 }
 
-function SwitchFlashMode({
+function SwitchFlashModeButton({
   value,
   disabled,
   onChange,
@@ -235,14 +219,85 @@ function CloseButton({ disabled, onPress }: { onPress: () => void; disabled?: bo
       disabled={disabled}
       style={{
         borderRadius: 40,
-        // borderColor: '#ffffff33',
-        // borderWidth: 1,
         padding: 8,
-        // backgroundColor: '#00000033',
         opacity: disabled ? 0.5 : 1,
       }}
     >
       <CrossIcon color="#fff" size={32} />
     </TouchableRipple>
+  );
+}
+
+type CaptureMode = 'photo' | 'video';
+
+function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => void }) {
+  const { t } = useTranslation();
+
+  const carouselRef = useRef<ICarouselInstance>(null);
+
+  const data = useMemo(() => [t('camera.photo'), t('camera.video')] as CaptureMode[], [t]);
+
+  return (
+    <Carousel
+      ref={carouselRef}
+      width={120}
+      height={40}
+      mode="parallax"
+      loop={false}
+      modeConfig={{
+        parallaxScrollingScale: 0.9,
+        parallaxScrollingOffset: 50,
+      }}
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'visible',
+      }}
+      scrollAnimationDuration={300}
+      data={data}
+      defaultIndex={0}
+      onSnapToItem={(index) => onChange(data[index])}
+      customAnimation={(value: number) => {
+        'worklet';
+        const scale = interpolate(value, [-1, 0, 1], [0.8, 1, 0.8], Extrapolate.CLAMP);
+
+        const translate = interpolate(value, [0, 1], [0, 100]);
+
+        const backgroundColor = interpolateColor(value, [-1, 0, 1], ['transparent', '#00000008', 'transparent']);
+
+        const transform = {
+          transform: [
+            { scale },
+            {
+              translateX: translate,
+            },
+            { perspective: 150 },
+          ],
+        };
+
+        return {
+          ...transform,
+          backgroundColor,
+          width: 80,
+          borderRadius: 40,
+        };
+      }}
+      renderItem={({ index, item }) => (
+        <TouchableRipple
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 40,
+          }}
+          onPress={() => carouselRef.current?.scrollTo({ index, animated: true })}
+          borderless
+        >
+          <Text uppercase textAlign="center" color="#fff" fontWeight="700">
+            {item}
+          </Text>
+        </TouchableRipple>
+      )}
+    />
   );
 }

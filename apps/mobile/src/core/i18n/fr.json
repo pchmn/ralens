@@ -16,5 +16,9 @@
       "description": "Revivez la magie des pellicules photos, directement sur votre téléphone.",
       "getStarted": "Commencer"
     }
+  },
+  "camera": {
+    "photo": "Photo",
+    "video": "Vidéo"
   }
 }
