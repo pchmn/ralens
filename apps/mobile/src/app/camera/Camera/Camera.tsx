@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableScale, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useState } from 'react';
-import { Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
   FadeInDown,
@@ -31,13 +31,17 @@ export function Camera({ onClose }: { onClose: () => void }) {
 
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
 
+  // const [captureMode, setCaptureMode] = useState<'photo' | 'video'>('photo');
+  // const [captureModeIndex, setCaptureModeIndex] = useState(0);
+
+  // const [isPhoto, setIsPhoto] = useState(true);
+
   const isFocused = useIsFocused();
 
   // const { width } = useSafeAreaFrame();
   const { top } = useSafeAreaInsets();
   const cameraHeight = Math.min(width * RATIO_16_9, height);
   const isFullScreen = cameraHeight === height;
-  console.log('isFullScreen', Platform.OS, { isFullScreen, cameraHeight, height });
 
   if (!status?.granted && status?.canAskAgain) {
     request();
@@ -89,9 +93,13 @@ export function Camera({ onClose }: { onClose: () => void }) {
           </Flex>
           <Flex direction="row" justify="center" pb="xl">
             {/* <Button mode="contained-tonal" compact>Photo</Button> */}
-            <Text color="#fff" uppercase fontWeight="600" style={{ borderBottomColor: '#fff', borderBottomWidth: 1 }}>
+            {/* <Text color="#fff" uppercase fontWeight="600" style={{ borderBottomColor: '#fff', borderBottomWidth: 1 }}>
               Photo
-            </Text>
+            </Text> */}
+            <Flex direction="row" gap="md">
+              <Text uppercase>Photo</Text>
+              <Text uppercase>Video</Text>
+            </Flex>
           </Flex>
         </Flex>
         {/* <Button onPress={onClose}>Close</Button> */}
@@ -128,7 +136,7 @@ function TakePhotoButton({ onPress, disabled }: { onPress: () => void; disabled?
       }}
       disabled={disabled}
     >
-      <View style={{ backgroundColor: pressed ? theme.colors.tertiary : '#fff', padding: 30, borderRadius: 30 }}>
+      <View style={{ backgroundColor: pressed ? theme.colors.tertiary : '#fff', padding: 35, borderRadius: 35 }}>
         <View />
       </View>
     </TouchableScale>
@@ -153,7 +161,7 @@ function SwitchDeviceButton({ onPress, disabled }: { onPress: () => void; disabl
       disabled={disabled}
       style={{
         borderRadius: 40,
-        borderColor: '#ffffff33',
+        borderColor: '#ffffff1A',
         padding: 8,
         borderWidth: 1,
         backgroundColor: '#00000033',
@@ -196,7 +204,7 @@ function SwitchFlashMode({
       disabled={disabled}
       style={{
         borderRadius: 40,
-        borderColor: '#ffffff33',
+        borderColor: '#ffffff1A',
         padding: 8,
         borderWidth: 1,
         backgroundColor: '#00000033',
