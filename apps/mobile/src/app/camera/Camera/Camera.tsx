@@ -2,7 +2,7 @@ import { Flex, TouchableScale, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Image, Modal, StyleSheet, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
   Extrapolate,
@@ -25,9 +25,24 @@ import { PermissionType, usePermission } from '@/shared/hooks';
 import { FlashMode, useCamera } from './useCamera';
 
 const RATIO_16_9 = 16 / 9;
+// const RATIO_4_3 = 4 / 3;
+
+export function CameraModal({ opened, onClose }: { opened: boolean; onClose: () => void }) {
+  return (
+    <Modal
+      visible={opened}
+      statusBarTranslucent
+      animationType="slide"
+      presentationStyle="fullScreen"
+      onRequestClose={onClose}
+    >
+      <Camera onClose={onClose} />
+    </Modal>
+  );
+}
 
 export function Camera({ onClose }: { onClose: () => void }) {
-  const { device, toggleDevice, ref, takePhoto, photoFormat, orientation } = useCamera();
+  const { device, toggleDevice, ref, takePhoto, photoFormat, videoFormat, orientation } = useCamera('16:9');
 
   const { status, request } = usePermission(PermissionType.CAMERA);
 
@@ -35,7 +50,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
 
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
 
-  const [, setCaptureMode] = useState<CaptureMode>('photo');
+  const [captureMode, setCaptureMode] = useState<CaptureMode>('photo');
 
   const isFocused = useIsFocused();
 
@@ -56,7 +71,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <Flex flex={1}>
+    <Flex flex={1} bgColor="#000">
       <Flex
         width={width}
         height={cameraHeight}
@@ -72,7 +87,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
           style={StyleSheet.absoluteFill}
           device={device}
           isActive={isFocused}
-          format={photoFormat}
+          format={captureMode === 'photo' ? photoFormat : videoFormat}
           orientation={orientation}
           enableHighQualityPhotos
           photo
@@ -87,9 +102,16 @@ export function Camera({ onClose }: { onClose: () => void }) {
             <Flex direction="row" flex={1} justify="center">
               <SwitchFlashModeButton value={flashMode} onChange={setFlashMode} disabled={status?.granted !== true} />
             </Flex>
-            <TakePhotoButton
-              onPress={async () => setMedia(await takePhoto(flashMode))}
+            <CaptureButton
+              onPress={async () => {
+                const media = await takePhoto(flashMode);
+                setMedia(media);
+                Image.getSize(`file://${media?.path}`, (width, height) => {
+                  console.log('image size', { width, height });
+                });
+              }}
               disabled={status?.granted !== true}
+              mode={captureMode}
             />
             <Flex direction="row" flex={1} justify="center">
               <SwitchDeviceButton onPress={toggleDevice} disabled={status?.granted !== true} />
@@ -109,10 +131,27 @@ export function Camera({ onClose }: { onClose: () => void }) {
   );
 }
 
-function TakePhotoButton({ onPress, disabled }: { onPress: () => void; disabled?: boolean }) {
+function CaptureButton({ onPress, disabled, mode }: { onPress: () => void; disabled?: boolean; mode: CaptureMode }) {
   const theme = useAppTheme();
 
   const [pressed, setPressed] = useState(false);
+
+  const size = useDerivedValue(() => {
+    return withTiming(mode === 'photo' ? 1 : 0, { duration: 200 });
+  });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    // const backgroundColor = interpolateColor(pressed ? 1 : 0, [0, 1], ['#fff', theme.colors.tertiary]);
+    const height = interpolate(size.value, [0, 1], [0.5, 1]);
+    const width = interpolate(size.value, [0, 1], [0.5, 1]);
+
+    return {
+      backgroundColor: pressed ? theme.colors.tertiary : '#fff',
+      height: `${Math.floor(100 * height)}%`,
+      width: `${Math.floor(100 * width)}%`,
+      borderRadius: 35,
+    };
+  });
 
   return (
     <TouchableScale
@@ -120,16 +159,20 @@ function TakePhotoButton({ onPress, disabled }: { onPress: () => void; disabled?
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       style={{
-        borderRadius: 41,
+        borderRadius: 70,
         borderColor: '#ffffff80',
         borderWidth: 6,
         opacity: disabled ? 0.5 : 1,
+        height: 70,
+        width: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
       disabled={disabled}
     >
-      <View style={{ backgroundColor: pressed ? theme.colors.tertiary : '#fff', padding: 35, borderRadius: 35 }}>
+      <Animated.View style={animatedStyle}>
         <View />
-      </View>
+      </Animated.View>
     </TouchableScale>
   );
 }
@@ -159,7 +202,7 @@ function SwitchDeviceButton({ onPress, disabled }: { onPress: () => void; disabl
         opacity: disabled ? 0.5 : 1,
       }}
     >
-      <Animated.View style={animatedStyle}>
+      <Animated.View style={animatedStyle} entering={FadeInDown.duration(200)}>
         <SwitchIcon color="#fff" size={28} />
       </Animated.View>
     </TouchableRipple>
@@ -235,7 +278,8 @@ function CloseButton({ disabled, onPress }: { onPress: () => void; disabled?: bo
   );
 }
 
-type CaptureMode = 'photo' | 'video';
+const captureModes = ['photo', 'video'] as const;
+type CaptureMode = typeof captureModes[number];
 
 function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => void }) {
   const { t } = useTranslation();
@@ -263,7 +307,7 @@ function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => v
       scrollAnimationDuration={300}
       data={data}
       defaultIndex={0}
-      onSnapToItem={(index) => onChange(data[index])}
+      onSnapToItem={(index) => onChange(captureModes[index])}
       customAnimation={(value: number) => {
         'worklet';
         const scale = interpolate(value, [-1, 0, 1], [0.9, 1, 0.9], Extrapolate.CLAMP);
