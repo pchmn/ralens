@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { gravity, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
-import { Camera, CameraDevice, CameraDeviceFormat, useCameraDevices } from 'react-native-vision-camera';
+import {
+  Camera,
+  CameraCaptureError,
+  CameraDevice,
+  CameraDeviceFormat,
+  useCameraDevices,
+  VideoFile,
+} from 'react-native-vision-camera';
 
 export type FlashMode = 'on' | 'off' | 'auto';
 
@@ -13,6 +20,7 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
   const [orientation, setOrientation] = useState<
     'portrait' | 'portraitUpsideDown' | 'landscapeLeft' | 'landscapeRight'
   >('portrait');
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const subscription = gravity.subscribe(({ x, y }) => {
@@ -80,7 +88,49 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
     return photo;
   };
 
-  return { device, toggleDevice, ref, takePhoto, photoFormat, videoFormat, orientation };
+  const startRecording = async (
+    flash: FlashMode,
+    onError?: (error: CameraCaptureError) => void,
+    onFinish?: (file: VideoFile) => void
+  ) => {
+    setIsRecording(true);
+    return new Promise<VideoFile>((resolve, reject) => {
+      ref.current?.startRecording({
+        flash,
+        onRecordingError: (err) => {
+          setIsRecording(false);
+          onError?.(err);
+          // onError(err);
+          reject(err);
+        },
+        onRecordingFinished: (file) => {
+          setIsRecording(false);
+          onFinish?.(file);
+          // onFinish(file);
+          resolve(file);
+        },
+      });
+    });
+    // ref.current?.startRecording({ flash, onRecordingError: onError, onRecordingFinished: onFinish });
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    ref.current?.stopRecording();
+  };
+
+  return {
+    device,
+    toggleDevice,
+    ref,
+    takePhoto,
+    startRecording,
+    stopRecording,
+    isRecording,
+    photoFormat,
+    videoFormat,
+    orientation,
+  };
 }
 
 const reduceRatio = (numerator: number, denominator: number): string => {

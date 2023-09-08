@@ -44,7 +44,18 @@ export function CameraModal({ visible, onClose }: { visible: boolean; onClose: (
 }
 
 export function Camera({ onClose }: { onClose: () => void }) {
-  const { device, toggleDevice, ref, takePhoto, photoFormat, videoFormat, orientation } = useCamera('16:9');
+  const {
+    device,
+    toggleDevice,
+    ref,
+    takePhoto,
+    startRecording,
+    stopRecording,
+    isRecording,
+    photoFormat,
+    videoFormat,
+    orientation,
+  } = useCamera('16:9');
 
   const { status, request } = usePermission(PermissionType.CAMERA);
 
@@ -105,14 +116,28 @@ export function Camera({ onClose }: { onClose: () => void }) {
             </Flex>
             <CaptureButton
               onPress={async () => {
-                const media = await takePhoto(flashMode);
-                setMedia(media);
-                Image.getSize(`file://${media?.path}`, (width, height) => {
-                  console.log('image size', { width, height });
-                });
+                if (isRecording) {
+                  stopRecording();
+                  return;
+                }
+                if (captureMode === 'photo') {
+                  const media = await takePhoto(flashMode);
+                  setMedia(media);
+                  Image.getSize(`file://${media?.path}`, (width, height) => {
+                    console.log('image size', { width, height });
+                  });
+                  return;
+                }
+                const video = await startRecording(flashMode);
+                console.log('video', video);
               }}
               disabled={status?.granted !== true}
               mode={captureMode}
+              isRecording={isRecording}
+              onLongPress={async () => {
+                const video = await startRecording(flashMode);
+                console.log('video', video);
+              }}
             />
             <Flex direction="row" flex={1} justify="center">
               <SwitchDeviceButton onPress={toggleDevice} disabled={status?.granted !== true} />
@@ -125,32 +150,50 @@ export function Camera({ onClose }: { onClose: () => void }) {
           )}
         </Flex>
       </Flex>
-      <Flex direction="row" justify="center" pt="sm">
-        <CaptureModeCarousel onChange={setCaptureMode} />
-      </Flex>
+      {!hasToContainCaotureMode && (
+        <Flex direction="row" justify="center" pt="sm">
+          <CaptureModeCarousel onChange={setCaptureMode} />
+        </Flex>
+      )}
     </Flex>
   );
 }
 
-function CaptureButton({ onPress, disabled, mode }: { onPress: () => void; disabled?: boolean; mode: CaptureMode }) {
+function CaptureButton({
+  onPress,
+  onLongPress,
+  disabled,
+  mode,
+  isRecording,
+}: {
+  onPress: () => void;
+  onLongPress: () => void;
+  disabled?: boolean;
+  mode: CaptureMode;
+  isRecording?: boolean;
+}) {
   const theme = useAppTheme();
 
   const [pressed, setPressed] = useState(false);
 
   const size = useDerivedValue(() => {
-    return withTiming(mode === 'photo' ? 1 : 0, { duration: 200 });
+    return withTiming(mode === 'photo' && !isRecording ? 1 : 0, { duration: 200 });
+  });
+
+  const animatedBorderRadius = useDerivedValue(() => {
+    return withTiming(isRecording ? 0 : 1, { duration: 200 });
   });
 
   const animatedStyle = useAnimatedStyle(() => {
-    // const backgroundColor = interpolateColor(pressed ? 1 : 0, [0, 1], ['#fff', theme.colors.tertiary]);
-    const height = interpolate(size.value, [0, 1], [0.5, 1]);
-    const width = interpolate(size.value, [0, 1], [0.5, 1]);
+    const height = interpolate(size.value, [0, 1], [0.3, 1]);
+    const width = interpolate(size.value, [0, 1], [0.3, 1]);
+    const borderRadius = interpolate(animatedBorderRadius.value, [0, 1], [3, 35]);
 
     return {
-      backgroundColor: pressed ? theme.colors.tertiary : '#fff',
+      backgroundColor: pressed && !isRecording ? theme.colors.tertiary : '#fff',
       height: `${Math.floor(100 * height)}%`,
       width: `${Math.floor(100 * width)}%`,
-      borderRadius: 35,
+      borderRadius,
     };
   });
 
@@ -162,6 +205,7 @@ function CaptureButton({ onPress, disabled, mode }: { onPress: () => void; disab
       style={{
         borderRadius: 70,
         borderColor: '#ffffff80',
+        backgroundColor: isRecording ? '#FF6961' : '#00000033',
         borderWidth: 6,
         opacity: disabled ? 0.5 : 1,
         height: 70,
@@ -169,6 +213,7 @@ function CaptureButton({ onPress, disabled, mode }: { onPress: () => void; disab
         justifyContent: 'center',
         alignItems: 'center',
       }}
+      onLongPress={onLongPress}
       disabled={disabled}
     >
       <Animated.View style={animatedStyle}>
