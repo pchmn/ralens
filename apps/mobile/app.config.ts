@@ -72,7 +72,8 @@ const config: ExpoConfig = {
     '@react-native-firebase/app',
     'sentry-expo',
     'expo-router',
-    './plugins/withPodFile',
+    './plugins/build/withPodFile',
+    './plugins/build/withTransparentNavigationBar',
     'react-native-vision-camera',
     [
       'expo-build-properties',
