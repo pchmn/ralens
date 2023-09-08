@@ -18,14 +18,12 @@ export default function Events() {
           Open Camera
         </Button>
       </Flex>
-      {opened && (
-        <CameraModal
-          opened={opened}
-          onClose={() => {
-            setOpened(false);
-          }}
-        />
-      )}
+      <CameraModal
+        visible={opened}
+        onClose={() => {
+          setOpened(false);
+        }}
+      />
     </>
   );
 }

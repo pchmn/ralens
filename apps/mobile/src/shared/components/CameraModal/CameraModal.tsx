@@ -2,11 +2,12 @@ import { Flex, TouchableScale, useAppTheme } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Modal, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
   Extrapolate,
   FadeInDown,
+  FadeOut,
   FadeOutUp,
   interpolate,
   interpolateColor,
@@ -22,19 +23,20 @@ import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 import { CrossIcon, FlashAutoIcon, FlashOffIcon, FlashOnIcon, SwitchIcon } from '@/shared/components';
 import { PermissionType, usePermission } from '@/shared/hooks';
 
+import { Modal } from '../Modal/Modal';
 import { FlashMode, useCamera } from './useCamera';
 
 const RATIO_16_9 = 16 / 9;
 // const RATIO_4_3 = 4 / 3;
 
-export function CameraModal({ opened, onClose }: { opened: boolean; onClose: () => void }) {
+export function CameraModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   return (
     <Modal
-      visible={opened}
-      statusBarTranslucent
-      animationType="slide"
-      presentationStyle="fullScreen"
-      onRequestClose={onClose}
+      visible={visible}
+      onDismiss={onClose}
+      fullScreen
+      enteringAnimation={FadeInDown.duration(200)}
+      exitingAnimation={FadeOut.duration(200)}
     >
       <Camera onClose={onClose} />
     </Modal>
@@ -75,7 +77,6 @@ export function Camera({ onClose }: { onClose: () => void }) {
       <Flex
         width={width}
         height={cameraHeight}
-        bgColor="#000"
         borderRadius={16}
         mt={isFullScreen ? 0 : top}
         pt={isFullScreen ? top : 0}
