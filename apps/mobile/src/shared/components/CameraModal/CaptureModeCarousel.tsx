@@ -7,7 +7,15 @@ import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 const captureModes = ['photo', 'video'] as const;
 export type CaptureMode = typeof captureModes[number];
 
-export function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMode) => void }) {
+export function CaptureModeCarousel({
+  value,
+  onChange,
+  isCapturing,
+}: {
+  value: CaptureMode;
+  onChange: (value: CaptureMode) => void;
+  isCapturing: boolean;
+}) {
   const { t } = useTranslation();
 
   const carouselRef = useRef<ICarouselInstance>(null);
@@ -32,8 +40,9 @@ export function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMod
       }}
       scrollAnimationDuration={300}
       data={data}
-      defaultIndex={0}
+      defaultIndex={captureModes.indexOf(value)}
       onSnapToItem={(index) => onChange(captureModes[index])}
+      enabled={!isCapturing}
       customAnimation={(value: number) => {
         'worklet';
         const scale = interpolate(value, [-1, 0, 1], [1, 1, 1], Extrapolate.CLAMP);
@@ -57,6 +66,7 @@ export function CaptureModeCarousel({ onChange }: { onChange: (value: CaptureMod
         <CaptureModeItem
           animationValue={animationValue}
           text={item}
+          disabled={isCapturing}
           onPress={() => carouselRef.current?.scrollTo({ index, animated: true })}
         />
       )}
@@ -68,10 +78,12 @@ function CaptureModeItem({
   animationValue,
   text,
   onPress,
+  disabled,
 }: {
   animationValue: Animated.SharedValue<number>;
   text: string;
   onPress?: () => void;
+  disabled: boolean;
 }) {
   const textAnimatedStyle = useAnimatedStyle(() => {
     const color = interpolateColor(animationValue.value, [-1, 0, 1], ['#ffffff80', '#fff', '#ffffff80']);
@@ -94,6 +106,7 @@ function CaptureModeItem({
       }}
       onPress={onPress}
       borderless
+      disabled={disabled}
     >
       <Animated.Text style={textAnimatedStyle}>{text}</Animated.Text>
     </TouchableRipple>

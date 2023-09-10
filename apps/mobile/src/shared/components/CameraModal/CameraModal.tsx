@@ -171,14 +171,18 @@ export function Camera({ onClose }: { onClose: () => void }) {
             </Flex>
             {hasToContainCaptureMode && (
               <Flex direction="row" justify="center" pb="xl">
-                {cameraPermissionStatus?.granted && <CaptureModeCarousel onChange={setCaptureMode} />}
+                {cameraPermissionStatus?.granted && (
+                  <CaptureModeCarousel value={captureMode} onChange={setCaptureMode} isCapturing={isCapturing} />
+                )}
               </Flex>
             )}
           </Flex>
         </Flex>
         {!hasToContainCaptureMode && (
           <Flex direction="row" justify="center" pt="sm">
-            {cameraPermissionStatus?.granted && <CaptureModeCarousel onChange={setCaptureMode} />}
+            {cameraPermissionStatus?.granted && (
+              <CaptureModeCarousel value={captureMode} onChange={setCaptureMode} isCapturing={isCapturing} />
+            )}
           </Flex>
         )}
       </Flex>
