@@ -7,7 +7,8 @@
     "create": "Create",
     "next": "Next",
     "grantPermission": "Grant permission",
-    "openSettings": "Open settings"
+    "openSettings": "Open settings",
+    "settings": "Settings"
   },
   "onboard": {
     "welcome": {
@@ -19,6 +20,18 @@
   },
   "camera": {
     "photo": "Photo",
-    "video": "Video"
+    "video": "Video",
+    "cameraPermissionDialog": {
+      "title": "Camera permission",
+      "content": "Ralens needs access to your camera to take photos and videos.",
+      "dismiss": "Dismiss",
+      "grantPermission": "Grant permission"
+    },
+    "microphonePermissionDialog": {
+      "title": "Microphone permission",
+      "content": "Ralens needs access to your microphone to record videos.",
+      "dismiss": "Dismiss",
+      "grantPermission": "Grant permission"
+    }
   }
 }

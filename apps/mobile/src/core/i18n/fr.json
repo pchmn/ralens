@@ -7,7 +7,8 @@
     "create": "Créer",
     "next": "Suivant",
     "grantPermission": "Autoriser la permission",
-    "openSettings": "Ouvrir les paramètres"
+    "openSettings": "Ouvrir les paramètres",
+    "settings": "Paramètres"
   },
   "onboard": {
     "welcome": {
@@ -19,6 +20,18 @@
   },
   "camera": {
     "photo": "Photo",
-    "video": "Vidéo"
+    "video": "Vidéo",
+    "cameraPermissionDialog": {
+      "title": "Accès à la caméra",
+      "content": "Ralens a besoin d'accéder à votre caméra afin de prendre des photos et des vidéos.",
+      "dismiss": "Annuler",
+      "grantPermission": "Autoriser"
+    },
+    "microphonePermissionDialog": {
+      "title": "Accès au microphone",
+      "content": "Ralens a besoin d'accéder à votre microphone afin d'enregistrer des vidéos.",
+      "dismiss": "Annuler",
+      "grantPermission": "Autoriser"
+    }
   }
 }
