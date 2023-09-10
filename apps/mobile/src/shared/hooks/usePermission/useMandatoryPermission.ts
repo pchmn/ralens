@@ -6,19 +6,19 @@ import { usePermission } from './usePermission';
 export function useMandatoryPermission(type: PermissionType, options?: { when: boolean }) {
   const { when = true } = options || {};
 
-  const { status, request, openSettings } = usePermission(type);
+  const { status, request, openSettings, isRequesting } = usePermission(type);
 
   const [isFirstAsk, setIsFirstAsk] = useState(true);
 
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  if (when && status && !status.granted && (!status.canAskAgain || !isFirstAsk) && !dialogVisible) {
+  if (when && status && !status.granted && (!status.canAskAgain || !isFirstAsk) && !isRequesting && !dialogVisible) {
     setDialogVisible(true);
   } else if (status?.granted && dialogVisible) {
     setDialogVisible(false);
   }
 
-  if (when && !status?.granted && status?.canAskAgain && isFirstAsk) {
+  if (when && !status?.granted && status?.canAskAgain && isFirstAsk && !isRequesting) {
     setIsFirstAsk(false);
     request();
   }

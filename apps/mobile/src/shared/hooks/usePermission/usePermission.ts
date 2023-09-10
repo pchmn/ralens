@@ -17,6 +17,7 @@ const getPermissionModule = (type: PermissionType) => {
 
 export function usePermission(type: PermissionType) {
   const [status, setStatus] = useState<PermissionStatus>();
+  const [isRequesting, setIsRequesting] = useState(false);
 
   const getStatus = useCallback(async () => {
     const result = await getPermissionModule(type).getStatus();
@@ -25,8 +26,13 @@ export function usePermission(type: PermissionType) {
   }, [type]);
 
   const request = async () => {
+    if (isRequesting) {
+      return status;
+    }
+    setIsRequesting(true);
     const result = await getPermissionModule(type).request();
     setStatus((prev) => (JSON.stringify(prev) !== JSON.stringify(result) ? result : prev));
+    setIsRequesting(false);
     return result;
   };
 
@@ -44,5 +50,5 @@ export function usePermission(type: PermissionType) {
     };
   }, [getStatus]);
 
-  return { status, request, getStatus, openSettings };
+  return { status, request, getStatus, openSettings, isRequesting };
 }

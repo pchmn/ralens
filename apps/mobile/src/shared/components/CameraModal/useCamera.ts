@@ -21,6 +21,7 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
     'portrait' | 'portraitUpsideDown' | 'landscapeLeft' | 'landscapeRight'
   >('portrait');
   const [isRecording, setIsRecording] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   useEffect(() => {
     const subscription = gravity.subscribe(({ x, y }) => {
@@ -84,7 +85,9 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
   };
 
   const takePhoto = async (flash: FlashMode) => {
+    setIsCapturing(true);
     const photo = await ref.current?.takePhoto({ qualityPrioritization: 'quality', flash });
+    setIsCapturing(false);
     return photo;
   };
 
@@ -94,17 +97,20 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
     onFinish?: (file: VideoFile) => void
   ) => {
     setIsRecording(true);
+    setIsCapturing(true);
     return new Promise<VideoFile>((resolve, reject) => {
       ref.current?.startRecording({
         flash,
         onRecordingError: (err) => {
           setIsRecording(false);
+          setIsCapturing(false);
           onError?.(err);
           // onError(err);
           reject(err);
         },
         onRecordingFinished: (file) => {
           setIsRecording(false);
+          setIsCapturing(false);
           onFinish?.(file);
           // onFinish(file);
           resolve(file);
@@ -127,6 +133,7 @@ export function useCamera(ratio: '16:9' | '4:3' = '16:9') {
     startRecording,
     stopRecording,
     isRecording,
+    isCapturing,
     photoFormat,
     videoFormat,
     orientation,

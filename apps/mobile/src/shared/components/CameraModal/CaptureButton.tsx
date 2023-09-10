@@ -13,7 +13,7 @@ export function CaptureButton({
   isRecording,
 }: {
   onPress: () => void;
-  onLongPress: () => void;
+  onLongPress?: () => void;
   disabled?: boolean;
   mode: CaptureMode;
   isRecording?: boolean;

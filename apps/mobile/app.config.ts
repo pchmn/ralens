@@ -54,7 +54,8 @@ const config: ExpoConfig = {
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       UIBackgroundModes: ['fetch', 'remote-notification'],
-      NSMicrophoneUsageDescription: 'Allow $(PRODUCT_NAME) to access your microphone',
+      NSMicrophoneUsageDescription: '$(PRODUCT_NAME) needs access to the microphone in order to record videos',
+      NSCameraUsageDescription: '$(PRODUCT_NAME) needs access to the camera in order to take photos and videos',
     },
   },
   android: {

@@ -3,11 +3,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { openSettings } from 'expo-linking';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
+import { Camera as VisionCamera, PhotoFile, VideoFile } from 'react-native-vision-camera';
 
 import { CrossIcon } from '@/shared/components';
 import { PermissionType, useMandatoryPermission } from '@/shared/hooks';
@@ -42,19 +42,20 @@ export function Camera({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
 
   const {
+    ref,
     device,
     toggleDevice,
-    ref,
     takePhoto,
     startRecording,
     stopRecording,
     isRecording,
+    isCapturing,
     photoFormat,
     videoFormat,
     orientation,
   } = useCamera('16:9');
 
-  const [, setMedia] = useState<PhotoFile>();
+  const [, setMedia] = useState<PhotoFile | VideoFile>();
 
   const [flashMode, setFlashMode] = useState<FlashMode>('auto');
   const [captureMode, setCaptureMode] = useState<CaptureMode>('photo');
@@ -79,6 +80,28 @@ export function Camera({ onClose }: { onClose: () => void }) {
   const cameraHeight = Math.min(width * RATIO_16_9, maxHeight);
   const isFullScreen = cameraHeight + top > maxHeight;
   const hasToContainCaptureMode = isFullScreen || cameraHeight + top + CAPTURE_MODE_HEIGHT > maxHeight;
+
+  const handleCapturePress = async () => {
+    if (!cameraPermissionStatus?.granted) {
+      return;
+    }
+    if (captureMode === 'video' && !microPermissionStatus?.granted) {
+      return;
+    }
+
+    if (captureMode === 'photo') {
+      // Photo
+      const media = await takePhoto(flashMode);
+      setMedia(media);
+    } else if (isRecording) {
+      // Stop video recording
+      stopRecording();
+    } else {
+      // Start video recording
+      const video = await startRecording(flashMode);
+      setMedia(video);
+    }
+  };
 
   if (!device) {
     return null;
@@ -137,29 +160,10 @@ export function Camera({ onClose }: { onClose: () => void }) {
                 />
               </Flex>
               <CaptureButton
-                onPress={async () => {
-                  if (isRecording) {
-                    stopRecording();
-                    return;
-                  }
-                  if (captureMode === 'photo') {
-                    const media = await takePhoto(flashMode);
-                    setMedia(media);
-                    Image.getSize(`file://${media?.path}`, (width, height) => {
-                      console.log('image size', { width, height });
-                    });
-                    return;
-                  }
-                  const video = await startRecording(flashMode);
-                  console.log('video', video);
-                }}
-                disabled={cameraPermissionStatus?.granted !== true}
+                onPress={handleCapturePress}
+                disabled={!cameraPermissionStatus?.granted || isCapturing}
                 mode={captureMode}
                 isRecording={isRecording}
-                onLongPress={async () => {
-                  const video = await startRecording(flashMode);
-                  console.log('video', video);
-                }}
               />
               <Flex direction="row" flex={1} justify="center">
                 <SwitchDeviceButton onPress={toggleDevice} disabled={cameraPermissionStatus?.granted !== true} />

@@ -1,4 +1,4 @@
 {
-  "NSCameraUsageDescription": "$(PRODUCT_NAME) nécessite l'accès à votre appareil photo pour prendre des photos et des vidéos.",
-  "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) nécessite l'accès à votre microphone pour enregistrer des vidéos."
+  "NSCameraUsageDescription": "Ralens nécessite l'accès à votre appareil photo pour prendre des photos et des vidéos",
+  "NSMicrophoneUsageDescription": "Ralens nécessite l'accès à votre microphone pour enregistrer des vidéos"
 }
