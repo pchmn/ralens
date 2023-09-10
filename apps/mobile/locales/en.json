@@ -1,0 +1,4 @@
+{
+  "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to the camera in order to take photos and videos.",
+  "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to the microphone in order to record videos"
+}

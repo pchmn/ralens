@@ -52,7 +52,9 @@ const config: ExpoConfig = {
         ? process.env.GOOGLE_SERVICES_PLIST_PREVIEW
         : process.env.GOOGLE_SERVICES_PLIST_DEV,
     infoPlist: {
+      CFBundleAllowMixedLocalizations: true,
       UIBackgroundModes: ['fetch', 'remote-notification'],
+      NSMicrophoneUsageDescription: 'Allow $(PRODUCT_NAME) to access your microphone',
     },
   },
   android: {
@@ -67,6 +69,11 @@ const config: ExpoConfig = {
         : process.env.APP_ENV === 'preview'
         ? process.env.GOOGLE_SERVICES_JSON_PREVIEW
         : process.env.GOOGLE_SERVICES_JSON_DEV,
+    permissions: ['CAMERA', 'RECORD_AUDIO'],
+  },
+  locales: {
+    en: './locales/en.json',
+    fr: './locales/fr.json',
   },
   plugins: [
     '@react-native-firebase/app',
@@ -90,16 +97,7 @@ const config: ExpoConfig = {
         },
       },
     ],
-    [
-      'react-native-vision-camera',
-      {
-        cameraPermissionText: '$(PRODUCT_NAME) needs access to your Camera.',
-
-        // optionally, if you want to record audio:
-        enableMicrophonePermission: true,
-        microphonePermissionText: '$(PRODUCT_NAME) needs access to your Microphone.',
-      },
-    ],
+    'react-native-vision-camera',
   ],
   hooks: {
     postPublish: [
