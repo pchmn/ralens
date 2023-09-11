@@ -1,20 +1,18 @@
-import { Flex } from '@ralens/react-native';
+import { Flex, useSecureStorage } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { openSettings } from 'expo-linking';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera as VisionCamera, PhotoFile, VideoFile } from 'react-native-vision-camera';
+import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 
 import { CrossIcon } from '@/shared/components';
 import { PermissionType, useMandatoryPermission } from '@/shared/hooks';
 
 import { Modal } from '../Modal/Modal';
 import { CaptureButton } from './CaptureButton';
-import { CaptureMode, CaptureModeCarousel } from './CaptureModeCarousel';
 import { PermissionDialog } from './PermissionDialog';
 import { SwitchDeviceButton } from './SwitchDeviceButton';
 import { SwitchFlashModeButton } from './SwitchFlashModeButton';
@@ -22,7 +20,6 @@ import { FlashMode, useCamera } from './useCamera';
 
 const RATIO_16_9 = 16 / 9;
 // const RATIO_4_3 = 4 / 3;
-const CAPTURE_MODE_HEIGHT = 48;
 
 export function CameraModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   return (
@@ -41,35 +38,17 @@ export function CameraModal({ visible, onClose }: { visible: boolean; onClose: (
 export function Camera({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
 
-  const {
-    ref,
-    device,
-    toggleDevice,
-    takePhoto,
-    startRecording,
-    stopRecording,
-    isRecording,
-    isCapturing,
-    photoFormat,
-    videoFormat,
-    orientation,
-  } = useCamera('16:9');
+  const { ref, device, toggleDevice, takePhoto, isCapturing, photoFormat, orientation } = useCamera('16:9');
 
-  const [, setMedia] = useState<PhotoFile | VideoFile>();
+  const [, setMedia] = useState<PhotoFile>();
 
-  const [flashMode, setFlashMode] = useState<FlashMode>('auto');
-  const [captureMode, setCaptureMode] = useState<CaptureMode>('photo');
+  const [flashMode, setFlashMode] = useSecureStorage<FlashMode>('flashMode', 'auto');
 
   const {
     status: cameraPermissionStatus,
     request: requestCameraPermission,
     dialogVisible: cameraPermissionDialogVisible,
   } = useMandatoryPermission(PermissionType.CAMERA);
-  const {
-    status: microPermissionStatus,
-    request: requestMicroPermission,
-    dialogVisible: microPermissionDialogVisible,
-  } = useMandatoryPermission(PermissionType.MICROPHONE, { when: captureMode === 'video' });
 
   const isFocused = useIsFocused();
 
@@ -79,28 +58,15 @@ export function Camera({ onClose }: { onClose: () => void }) {
 
   const cameraHeight = Math.min(width * RATIO_16_9, maxHeight);
   const isFullScreen = cameraHeight + top > maxHeight;
-  const hasToContainCaptureMode = isFullScreen || cameraHeight + top + CAPTURE_MODE_HEIGHT > maxHeight;
 
   const handleCapturePress = async () => {
     if (!cameraPermissionStatus?.granted) {
       return;
     }
-    if (captureMode === 'video' && !microPermissionStatus?.granted) {
-      return;
-    }
 
-    if (captureMode === 'photo') {
-      // Photo
-      const media = await takePhoto(flashMode);
-      setMedia(media);
-    } else if (isRecording) {
-      // Stop video recording
-      stopRecording();
-    } else {
-      // Start video recording
-      const video = await startRecording(flashMode);
-      setMedia(video);
-    }
+    const photo = await takePhoto(flashMode || 'auto');
+    setMedia(photo);
+    console.log('photo', photo);
   };
 
   if (!device) {
@@ -117,14 +83,6 @@ export function Camera({ onClose }: { onClose: () => void }) {
         onDismiss={onClose}
         onGrant={requestCameraPermission}
       />
-      <PermissionDialog
-        visible={!!microPermissionDialogVisible}
-        title={t('camera.microphonePermissionDialog.title')}
-        content={t('camera.microphonePermissionDialog.content')}
-        grantButtonText={microPermissionStatus?.canAskAgain ? t('common.grantPermission') : t('common.settings')}
-        onDismiss={onClose}
-        onGrant={microPermissionStatus?.canAskAgain ? requestMicroPermission : openSettings}
-      />
       <Flex flex={1} bgColor="#000">
         <Flex
           width={width}
@@ -140,51 +98,35 @@ export function Camera({ onClose }: { onClose: () => void }) {
             style={StyleSheet.absoluteFill}
             device={device}
             isActive={isFocused}
-            format={captureMode === 'photo' ? photoFormat : videoFormat}
+            format={photoFormat}
             orientation={orientation}
             enableHighQualityPhotos
             photo
-            video
             enableZoomGesture
           />
           <Flex direction="row" justify="space-between" p="lg">
             {cameraPermissionStatus?.granted && <CloseButton onPress={onClose} />}
           </Flex>
-          <Flex gap="xl" pb={hasToContainCaptureMode ? undefined : 30}>
+          <Flex gap="xl" pb={30}>
             <Flex direction="row" align="center" justify="space-between">
               <Flex direction="row" flex={1} justify="center">
                 <SwitchFlashModeButton
-                  value={flashMode}
+                  value={flashMode || 'auto'}
                   onChange={setFlashMode}
-                  disabled={cameraPermissionStatus?.granted !== true}
+                  disabled={!cameraPermissionStatus?.granted || isCapturing}
                 />
               </Flex>
               <CaptureButton
                 onPress={handleCapturePress}
                 disabled={!cameraPermissionStatus?.granted || isCapturing}
-                mode={captureMode}
-                isRecording={isRecording}
+                mode="photo"
               />
               <Flex direction="row" flex={1} justify="center">
-                <SwitchDeviceButton onPress={toggleDevice} disabled={cameraPermissionStatus?.granted !== true} />
+                <SwitchDeviceButton onPress={toggleDevice} disabled={!cameraPermissionStatus?.granted || isCapturing} />
               </Flex>
             </Flex>
-            {hasToContainCaptureMode && (
-              <Flex direction="row" justify="center" pb="xl">
-                {cameraPermissionStatus?.granted && (
-                  <CaptureModeCarousel value={captureMode} onChange={setCaptureMode} isCapturing={isCapturing} />
-                )}
-              </Flex>
-            )}
           </Flex>
         </Flex>
-        {!hasToContainCaptureMode && (
-          <Flex direction="row" justify="center" pt="sm">
-            {cameraPermissionStatus?.granted && (
-              <CaptureModeCarousel value={captureMode} onChange={setCaptureMode} isCapturing={isCapturing} />
-            )}
-          </Flex>
-        )}
       </Flex>
     </>
   );
