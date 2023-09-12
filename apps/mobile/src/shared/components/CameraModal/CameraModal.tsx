@@ -21,7 +21,15 @@ import { FlashMode, useCamera } from './useCamera';
 const RATIO_16_9 = 16 / 9;
 // const RATIO_4_3 = 4 / 3;
 
-export function CameraModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+export function CameraModal({
+  visible,
+  onClose,
+  onCapture,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  onCapture: (photo: PhotoFile) => void;
+}) {
   return (
     <Modal
       visible={visible}
@@ -30,12 +38,12 @@ export function CameraModal({ visible, onClose }: { visible: boolean; onClose: (
       enteringAnimation={FadeInDown.duration(200)}
       exitingAnimation={FadeOut.duration(200)}
     >
-      <Camera onClose={onClose} />
+      <Camera onClose={onClose} onCapture={onCapture} />
     </Modal>
   );
 }
 
-export function Camera({ onClose }: { onClose: () => void }) {
+export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture: (photo: PhotoFile) => void }) {
   const { t } = useTranslation();
 
   const { ref, device, toggleDevice, takePhoto, isCapturing, photoFormat, orientation } = useCamera('16:9');
@@ -65,8 +73,10 @@ export function Camera({ onClose }: { onClose: () => void }) {
     }
 
     const photo = await takePhoto(flashMode);
+    if (photo) {
+      onCapture(photo);
+    }
     setMedia(photo);
-    console.log('photo', photo);
   };
 
   if (!device) {

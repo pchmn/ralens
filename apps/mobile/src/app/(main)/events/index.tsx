@@ -23,6 +23,10 @@ export default function Events() {
         onClose={() => {
           setOpened(false);
         }}
+        onCapture={(photo) => {
+          console.log('onCapture', photo);
+          setOpened(false);
+        }}
       />
     </>
   );
