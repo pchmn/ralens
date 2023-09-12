@@ -1,19 +1,10 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require('fs');
-const path = require('path');
+import { withDangerousMod, withPlugins } from '@expo/config-plugins';
+import { ExpoConfig } from '@expo/config-types';
+import { readFile, writeFile } from 'fs/promises';
+import path from 'path';
 
-const { withDangerousMod, withPlugins } = require('@expo/config-plugins');
-
-async function readFile(path) {
-  return fs.promises.readFile(path, 'utf8');
-}
-
-async function saveFile(path, content) {
-  return fs.promises.writeFile(path, content, 'utf8');
-}
-
-module.exports = (config) =>
-  withPlugins(config, [
+function withPodFile(config: ExpoConfig) {
+  return withPlugins(config, [
     (config) => {
       return withDangerousMod(config, [
         'ios',
@@ -29,13 +20,19 @@ module.exports = (config) =>
             '  end\n';
 
           // replaces the line post_install do |installer| with the content of thingsToAdd
-          const contents = (await readFile(file)).replace('post_install do |installer|\n', thingsToAdd);
+          const contents = (await readFile(file, { encoding: 'utf-8' })).replace(
+            'post_install do |installer|\n',
+            thingsToAdd
+          );
           /*
            * Now re-adds the content
            */
-          await saveFile(file, contents);
+          await writeFile(file, contents, { encoding: 'utf-8' });
           return config;
         },
       ]);
     },
   ]);
+}
+
+module.exports = withPodFile;

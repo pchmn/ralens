@@ -71,9 +71,9 @@ export function UiProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(paperTheme.colors.elevation.level2);
-    NavigationBar.setButtonStyleAsync(paperTheme.dark ? 'light' : 'dark');
-  }, [paperTheme]);
+    NavigationBar.setPositionAsync('absolute');
+    NavigationBar.setButtonStyleAsync(colorScheme === 'dark' ? 'light' : 'dark');
+  }, [colorScheme]);
 
   return (
     <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme: paperTheme, navigationTheme }}>
@@ -84,9 +84,7 @@ export function UiProvider({ children }: { children: React.ReactNode }) {
           translucent
         />
         <NavigationThemeProvider value={navigationTheme}>
-          <Flex flex={1} bgColor={paperTheme.colors.background}>
-            {children}
-          </Flex>
+          <Flex flex={1}>{children}</Flex>
         </NavigationThemeProvider>
       </PaperProvider>
     </UiProviderContext.Provider>

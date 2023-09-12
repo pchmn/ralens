@@ -6,7 +6,7 @@ export default function App() {
 
   console.log('pathname', pathname);
 
-  if (!navigationState.key) {
+  if (!navigationState?.key) {
     return null;
   }
 

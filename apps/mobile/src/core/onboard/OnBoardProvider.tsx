@@ -13,7 +13,7 @@ function useOnBoard() {
   const navigationState = useRootNavigationState();
 
   useEffect(() => {
-    if (!navigationState.key) {
+    if (!navigationState?.key) {
       return;
     }
 
@@ -24,7 +24,7 @@ function useOnBoard() {
     } else if (!isFirstLaunch && isOnBoardGroup) {
       router.replace('/');
     }
-  }, [isFirstLaunch, navigationState.key, router, segments]);
+  }, [isFirstLaunch, navigationState?.key, router, segments]);
 
   return null;
 }

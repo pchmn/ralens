@@ -42,6 +42,8 @@ export function isSecureStorageInitialized() {
   return !!storage;
 }
 
+export function useSecureStorage<T>(key: string): [T | undefined, (value: T | undefined) => void, () => void];
+export function useSecureStorage<T>(key: string, initialValue: T): [T, (value: T) => void, () => void];
 export function useSecureStorage<T>(key: string, initialValue?: T) {
   if (!storage) {
     throw new Error('Secure storage is not initialized');

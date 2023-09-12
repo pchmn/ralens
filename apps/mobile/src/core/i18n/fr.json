@@ -6,8 +6,9 @@
     "confirm": "Confirmer",
     "create": "Créer",
     "next": "Suivant",
-    "grantPermission": "Autoriser la permission",
-    "openSettings": "Ouvrir les paramètres"
+    "grantPermission": "Autoriser",
+    "openSettings": "Ouvrir les paramètres",
+    "settings": "Paramètres"
   },
   "onboard": {
     "welcome": {
@@ -15,6 +16,22 @@
       "content": "The Safe Network is a new, decentralised and secure way to access the world wide web. It is owned and controlled by everyone who uses it and is powered by the unused resources of its users.",
       "description": "Revivez la magie des pellicules photos, directement sur votre téléphone.",
       "getStarted": "Commencer"
+    }
+  },
+  "camera": {
+    "photo": "Photo",
+    "video": "Vidéo",
+    "cameraPermissionDialog": {
+      "title": "Accès à la caméra",
+      "content": "Ralens a besoin d'accéder à votre caméra afin de prendre des photos et des vidéos.",
+      "dismiss": "Annuler",
+      "grantPermission": "Autoriser"
+    },
+    "microphonePermissionDialog": {
+      "title": "Accès au microphone",
+      "content": "Ralens a besoin d'accéder à votre microphone afin d'enregistrer des vidéos.",
+      "dismiss": "Annuler",
+      "grantPermission": "Autoriser"
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   DimensionValue,
   FlexAlignType,
   LayoutChangeEvent,
+  StyleProp,
   View,
   ViewStyle,
 } from 'react-native';
@@ -38,7 +39,7 @@ interface FlexProps {
   position?: 'absolute' | 'relative';
   display?: 'flex' | 'none';
   alignSelf?: 'auto' | FlexAlignType;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
 
@@ -70,31 +71,33 @@ export function Flex({
 }: PropsWithChildren<FlexProps>) {
   return (
     <View
-      style={{
-        display: 'flex',
-        flexDirection: direction,
-        alignItems: align,
-        justifyContent: justify,
-        flexWrap: wrap,
-        padding: spacingValue(p),
-        paddingHorizontal: spacingValue(px),
-        paddingVertical: spacingValue(py),
-        paddingRight: spacingValue(pr),
-        paddingLeft: spacingValue(pl),
-        paddingTop: spacingValue(pt),
-        paddingBottom: spacingValue(pb),
-        margin: spacingValue(m),
-        marginHorizontal: spacingValue(mx),
-        marginVertical: spacingValue(my),
-        marginRight: spacingValue(mr),
-        marginLeft: spacingValue(ml),
-        marginTop: spacingValue(mt),
-        marginBottom: spacingValue(mb),
-        backgroundColor: bgColor,
-        gap: spacingValue(gap),
-        ...style,
-        ...otherProps,
-      }}
+      style={[
+        {
+          display: 'flex',
+          flexDirection: direction,
+          alignItems: align,
+          justifyContent: justify,
+          flexWrap: wrap,
+          padding: spacingValue(p),
+          paddingHorizontal: spacingValue(px),
+          paddingVertical: spacingValue(py),
+          paddingRight: spacingValue(pr),
+          paddingLeft: spacingValue(pl),
+          paddingTop: spacingValue(pt),
+          paddingBottom: spacingValue(pb),
+          margin: spacingValue(m),
+          marginHorizontal: spacingValue(mx),
+          marginVertical: spacingValue(my),
+          marginRight: spacingValue(mr),
+          marginLeft: spacingValue(ml),
+          marginTop: spacingValue(mt),
+          marginBottom: spacingValue(mb),
+          backgroundColor: bgColor,
+          gap: spacingValue(gap),
+          ...otherProps,
+        },
+        style,
+      ]}
       onLayout={onLayout}
     >
       {children}

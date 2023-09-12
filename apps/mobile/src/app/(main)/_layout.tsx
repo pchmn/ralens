@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useAppTheme } from '@ralens/react-native';
-import { setBackgroundColorAsync as setNavigationBarBackgroundColorAsync } from 'expo-navigation-bar';
 import { withLayoutContext } from 'expo-router';
-import { useEffect } from 'react';
 import {
   createMaterialBottomTabNavigator,
   MaterialBottomTabNavigationOptions,
@@ -28,13 +26,9 @@ export const unstable_settings = {
 export default function MainLayout() {
   const theme = useAppTheme();
 
-  useEffect(() => {
-    setNavigationBarBackgroundColorAsync(theme.colors.elevation.level2);
-  }, [theme]);
-
   return (
     <>
-      <MaterialBottomTabs>
+      <MaterialBottomTabs sceneAnimationEnabled sceneAnimationType="shifting" theme={theme}>
         <MaterialBottomTabs.Screen
           name="films/index"
           options={{
@@ -79,3 +73,23 @@ export default function MainLayout() {
     </>
   );
 }
+
+// const Touchable = ({ route, style, children, borderless, centered, rippleColor, ...rest }: any) => {
+//   console.log('route', route);
+//   return route.name === 'camera/index' ? null : TouchableRipple.supported ? (
+//     <TouchableRipple
+//       {...rest}
+//       disabled={rest.disabled || undefined}
+//       borderless={borderless}
+//       centered={centered}
+//       rippleColor={rippleColor}
+//       style={style}
+//     >
+//       {children}
+//     </TouchableRipple>
+//   ) : (
+//     <TouchableWithoutFeedback {...rest}>
+//       <View style={style}>{children}</View>
+//     </TouchableWithoutFeedback>
+//   );
+// };

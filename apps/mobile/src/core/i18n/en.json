@@ -7,7 +7,8 @@
     "create": "Create",
     "next": "Next",
     "grantPermission": "Grant permission",
-    "openSettings": "Open settings"
+    "openSettings": "Open settings",
+    "settings": "Settings"
   },
   "onboard": {
     "welcome": {
@@ -15,6 +16,22 @@
       "content": "The Safe Network is a new, decentralised and secure way to access the world wide web. It is owned and controlled by everyone who uses it and is powered by the unused resources of its users.",
       "description": "Rediscover the magic of film photos through your smartphone.",
       "getStarted": "Get started"
+    }
+  },
+  "camera": {
+    "photo": "Photo",
+    "video": "Video",
+    "cameraPermissionDialog": {
+      "title": "Camera permission",
+      "content": "Ralens needs access to your camera to take photos and videos.",
+      "dismiss": "Dismiss",
+      "grantPermission": "Grant permission"
+    },
+    "microphonePermissionDialog": {
+      "title": "Microphone permission",
+      "content": "Ralens needs access to your microphone to record videos.",
+      "dismiss": "Dismiss",
+      "grantPermission": "Grant permission"
     }
   }
 }

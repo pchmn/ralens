@@ -52,7 +52,10 @@ const config: ExpoConfig = {
         ? process.env.GOOGLE_SERVICES_PLIST_PREVIEW
         : process.env.GOOGLE_SERVICES_PLIST_DEV,
     infoPlist: {
+      CFBundleAllowMixedLocalizations: true,
       UIBackgroundModes: ['fetch', 'remote-notification'],
+      NSMicrophoneUsageDescription: '$(PRODUCT_NAME) needs access to the microphone in order to record videos',
+      NSCameraUsageDescription: '$(PRODUCT_NAME) needs access to the camera in order to take photos and videos',
     },
   },
   android: {
@@ -67,12 +70,18 @@ const config: ExpoConfig = {
         : process.env.APP_ENV === 'preview'
         ? process.env.GOOGLE_SERVICES_JSON_PREVIEW
         : process.env.GOOGLE_SERVICES_JSON_DEV,
+    permissions: ['CAMERA', 'RECORD_AUDIO'],
+  },
+  locales: {
+    en: './locales/en.json',
+    fr: './locales/fr.json',
   },
   plugins: [
     '@react-native-firebase/app',
     'sentry-expo',
     'expo-router',
-    './plugins/withPodfile',
+    './plugins/build/withPodFile',
+    './plugins/build/withTransparentNavigationBar',
     'react-native-vision-camera',
     [
       'expo-build-properties',
@@ -89,16 +98,7 @@ const config: ExpoConfig = {
         },
       },
     ],
-    [
-      'react-native-vision-camera',
-      {
-        cameraPermissionText: '$(PRODUCT_NAME) needs access to your Camera.',
-
-        // optionally, if you want to record audio:
-        enableMicrophonePermission: true,
-        microphonePermissionText: '$(PRODUCT_NAME) needs access to your Microphone.',
-      },
-    ],
+    'react-native-vision-camera',
   ],
   hooks: {
     postPublish: [

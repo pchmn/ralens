@@ -17,6 +17,12 @@ web-build/
 *.mobileprovision
 android/
 ios/
+!modules/*/android/
+!modules/*/ios/
+modules/*/android/**/build/
+modules/*/android/**/.idea/
+modules/*/android/**/.gradle/
+!modules/*/ios/
 
 # Metro
 .metro-health-check*
