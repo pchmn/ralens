@@ -1,10 +1,19 @@
 import { Flex, useSecureStorage } from '@ralens/react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
-import { FadeInDown, FadeOut } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 
@@ -51,6 +60,8 @@ export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture:
   const [, setMedia] = useState<PhotoFile>();
 
   const [flashMode, setFlashMode] = useSecureStorage<FlashMode>('flashMode', 'auto');
+
+  const [focusPoint, setFocusPoint] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const {
     status: cameraPermissionStatus,
@@ -101,8 +112,9 @@ export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture:
           mt={isFullScreen ? 0 : top}
           pt={isFullScreen ? top : 0}
           justify="space-between"
-          style={{ overflow: 'hidden' }}
+          style={{ position: 'relative', overflow: 'hidden' }}
         >
+          <FocusCircle x={focusPoint?.x} y={focusPoint?.y} />
           <VisionCamera
             ref={ref}
             style={StyleSheet.absoluteFill}
@@ -113,6 +125,11 @@ export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture:
             enableHighQualityPhotos
             photo
             enableZoomGesture
+            onTouchStart={async (event) => {
+              const focusPoint = { x: event.nativeEvent.pageX, y: event.nativeEvent.pageY - (isFullScreen ? 0 : top) };
+              setFocusPoint(focusPoint);
+              await ref.current?.focus(focusPoint);
+            }}
           />
           <Flex direction="row" justify="space-between" p="lg">
             {cameraPermissionStatus?.granted && <CloseButton onPress={onClose} />}
@@ -158,5 +175,43 @@ function CloseButton({ disabled, onPress }: { onPress: () => void; disabled?: bo
     >
       <CrossIcon color="#fff" size={32} />
     </TouchableRipple>
+  );
+}
+
+function FocusCircle({ x, y }: { x: number; y: number }) {
+  const scale = useSharedValue(0);
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  useEffect(() => {
+    if (x !== 0 || x !== 0) {
+      scale.value = withSequence(
+        withTiming(1.2, { duration: 300, easing: Easing.cubic }),
+        withTiming(1, { duration: 300, easing: Easing.cubic }),
+        withDelay(1000, withTiming(0, { duration: 0, easing: Easing.cubic }))
+      );
+    }
+  }, [scale, x, y]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: 'absolute',
+          top: y - 37.5,
+          left: x - 37.5,
+          height: 60,
+          width: 60,
+          borderRadius: 50,
+          backgroundColor: '#0000001A',
+          borderColor: '#fff',
+          borderWidth: 2,
+          zIndex: 2,
+        },
+        animatedStyles,
+      ]}
+    />
   );
 }
