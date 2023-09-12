@@ -64,7 +64,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const photo = await takePhoto(flashMode || 'auto');
+    const photo = await takePhoto(flashMode);
     setMedia(photo);
     console.log('photo', photo);
   };
@@ -111,7 +111,7 @@ export function Camera({ onClose }: { onClose: () => void }) {
             <Flex direction="row" align="center" justify="space-between">
               <Flex direction="row" flex={1} justify="center">
                 <SwitchFlashModeButton
-                  value={flashMode || 'auto'}
+                  value={flashMode}
                   onChange={setFlashMode}
                   disabled={!cameraPermissionStatus?.granted || isCapturing}
                 />
