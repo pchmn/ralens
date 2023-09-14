@@ -1,0 +1,64 @@
+table:
+  name: events
+  schema: public
+object_relationships:
+  - name: creator
+    using:
+      foreign_key_constraint_on: creatorId
+array_relationships:
+  - name: files
+    using:
+      foreign_key_constraint_on:
+        column: eventId
+        table:
+          name: event_files
+          schema: public
+  - name: participants
+    using:
+      foreign_key_constraint_on:
+        column: eventId
+        table:
+          name: event_participants
+          schema: public
+insert_permissions:
+  - role: anonymous
+    permission:
+      check: {}
+      set:
+        creatorId: x-hasura-User-Id
+      columns:
+        - endAt
+        - name
+        - params
+        - slug
+        - startAt
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - createdAt
+        - creatorId
+        - endAt
+        - id
+        - name
+        - params
+        - slug
+        - startAt
+        - updatedAt
+      filter:
+        participants:
+          userId:
+            _eq: X-Hasura-User-Id
+update_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - endAt
+        - name
+        - params
+        - slug
+        - startAt
+      filter:
+        creatorId:
+          _eq: X-Hasura-User-Id
+      check: null
