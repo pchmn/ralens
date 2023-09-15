@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: false
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -68,6 +64,9 @@ importers:
       apollo3-cache-persist:
         specifier: ^0.14.1
         version: 0.14.1(@apollo/client@3.8.1)
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
       expo:
         specifier: ~49.0.8
         version: 49.0.8(@babel/core@7.20.2)
@@ -140,6 +139,9 @@ importers:
       react-native-paper:
         specifier: ^5.10.1
         version: 5.10.1(react-native-safe-area-context@4.6.3)(react-native@0.72.4)(react@18.2.0)
+      react-native-paper-dates:
+        specifier: ^0.19.0
+        version: 0.19.0(react-native-paper@5.10.1)(react-native@0.72.4)(react@18.2.0)
       react-native-reanimated:
         specifier: ~3.3.0
         version: 3.3.0(@babel/core@7.20.2)(react-native@0.72.4)(react@18.2.0)
@@ -188,7 +190,7 @@ importers:
     devDependencies:
       '@nhost/nhost-js':
         specifier: ^2.2.13
-        version: 2.2.13
+        version: 2.2.13(graphql@16.8.0)
       '@ralens/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -2367,7 +2369,6 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.0
-    dev: false
 
   /@hapi/hoek@9.3.0:
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -2511,17 +2512,6 @@ packages:
       graphql-ws: 5.14.0(graphql@16.7.1)
     dev: false
 
-  /@nhost/graphql-js@0.1.4:
-    resolution: {integrity: sha512-IPHuGOf4iQrFsxG7Rh5jCCZzPCN9JkvldFww4Fz1lCVi9ZQNEaGaawIP5gBuBHeYIuALeaK1wVYKPc7vJ/euCA==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@15.8.0)
-      isomorphic-unfetch: 3.1.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@nhost/graphql-js@0.1.4(graphql@16.8.0):
     resolution: {integrity: sha512-IPHuGOf4iQrFsxG7Rh5jCCZzPCN9JkvldFww4Fz1lCVi9ZQNEaGaawIP5gBuBHeYIuALeaK1wVYKPc7vJ/euCA==}
     peerDependencies:
@@ -2532,7 +2522,6 @@ packages:
       isomorphic-unfetch: 3.1.0
     transitivePeerDependencies:
       - encoding
-    dev: false
 
   /@nhost/hasura-auth-js@2.1.7:
     resolution: {integrity: sha512-dbi8zrmuE3xSlA7WMNyrZzVPLKYSBUlKtUjob+axhts0+4TsqsB7NvdLXrhM0fYjRY5SFUtN2JLs+EWDGKAoLQ==}
@@ -2554,19 +2543,6 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@nhost/nhost-js@2.2.13:
-    resolution: {integrity: sha512-HU9eOpkVBGGMHsRThGyl654Y9W8bksSEnyEvDojUg76+3ngOn2ebrasXR/94YoR206soEzq3v4b0OKmn/1jlnQ==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@nhost/graphql-js': 0.1.4
-      '@nhost/hasura-auth-js': 2.1.7
-      '@nhost/hasura-storage-js': 2.2.2
-      isomorphic-unfetch: 3.1.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@nhost/nhost-js@2.2.13(graphql@16.8.0):
     resolution: {integrity: sha512-HU9eOpkVBGGMHsRThGyl654Y9W8bksSEnyEvDojUg76+3ngOn2ebrasXR/94YoR206soEzq3v4b0OKmn/1jlnQ==}
     peerDependencies:
@@ -2579,7 +2555,6 @@ packages:
       isomorphic-unfetch: 3.1.0
     transitivePeerDependencies:
       - encoding
-    dev: false
 
   /@nhost/react-apollo@5.0.32(@apollo/client@3.8.1)(@nhost/react@2.0.28)(graphql@16.8.0)(react@18.2.0):
     resolution: {integrity: sha512-DVzakIcVzIdlV4VJK+ZPSimrdicFWH/O6j5hfqhC3OGM5j1udpayy/6iBhUErJgFGhT6dzjUpSKxVqhHu6sC9Q==}
@@ -4503,6 +4478,13 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.22.10
+    dev: false
+
   /dayjs@1.11.9:
     resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
 
@@ -5969,7 +5951,6 @@ packages:
   /graphql@16.8.0:
     resolution: {integrity: sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: false
 
   /hard-rejection@2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==}
@@ -8253,6 +8234,20 @@ packages:
       react: 18.2.0
       react-native: 0.72.4(@babel/core@7.20.2)(react@18.2.0)
 
+  /react-native-paper-dates@0.19.0(react-native-paper@5.10.1)(react-native@0.72.4)(react@18.2.0):
+    resolution: {integrity: sha512-MQQ436Uv0XRHichulM2UZIvq0HO8AIiCR/ddGoX+Pe49gfx8JFVmzh2NMzsdL2oei+yCne8Gl9zamtSgDi5+FQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-paper: '*'
+      react-native-vector-icons: '*'
+    dependencies:
+      color: 3.2.1
+      react: 18.2.0
+      react-native: 0.72.4(@babel/core@7.20.2)(react@18.2.0)
+      react-native-paper: 5.10.1(react-native-safe-area-context@4.6.3)(react-native@0.72.4)(react@18.2.0)
+    dev: false
+
   /react-native-paper@5.10.1(react-native-safe-area-context@4.6.3)(react-native@0.72.4)(react@18.2.0):
     resolution: {integrity: sha512-/VNo9T87dtPBdQQI5CcaXjHtIAmlOoIe60W/iBcwUjZTVKMI///ZxcmxRSkACUYTcwyGAbkjhHHPqN2knrXp9Q==}
     peerDependencies:
@@ -10029,3 +10024,7 @@ packages:
 
   /zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

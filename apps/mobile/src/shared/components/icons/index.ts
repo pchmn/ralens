@@ -1,3 +1,5 @@
+export * from './ArrowLeftIcon';
+export * from './CalendarIcon';
 export * from './CrossIcon';
 export * from './FilmIcon';
 export * from './FilmOutlineIcon';
@@ -10,3 +12,4 @@ export * from './SettingsIcon';
 export * from './SettingsOutlineIcon';
 export * from './SvgIcon';
 export * from './SwitchIcon';
+export * from './TextIcon';

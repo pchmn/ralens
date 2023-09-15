@@ -4,30 +4,45 @@ import { Button } from 'react-native-paper';
 
 import { CameraModal } from '@/shared/components';
 
+import { CreateEventModal } from './CreateEventModal/CreateEventModal';
+
 export default function Events() {
-  const [opened, setOpened] = useState(false);
+  const [cameraVisible, setCameraVisible] = useState(false);
+  const [createEventVisible, setCreateEventVisible] = useState(false);
+
+  console.log('Events');
 
   return (
     <>
       <Flex flex={1} align="center" justify="center">
         <Button
           onPress={() => {
-            setOpened(true);
+            setCameraVisible(true);
           }}
         >
           Open Camera
         </Button>
+
+        <Button
+          onPress={() => {
+            setCreateEventVisible(true);
+          }}
+        >
+          Create Event
+        </Button>
       </Flex>
       <CameraModal
-        visible={opened}
+        visible={cameraVisible}
         onClose={() => {
-          setOpened(false);
+          setCameraVisible(false);
         }}
         onCapture={(photo) => {
           console.log('onCapture', photo);
-          setOpened(false);
+          setCameraVisible(false);
         }}
       />
+
+      <CreateEventModal visible={createEventVisible} onClose={() => setCreateEventVisible(false)} />
     </>
   );
 }
