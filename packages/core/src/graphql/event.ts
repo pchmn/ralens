@@ -1,4 +1,4 @@
-export const UPSERT_EVENT = `
+export const CREATE_EVENT = `
   mutation insert_events_one($data: events_insert_input!) {
     insert_events_one(object: $data) {
       id

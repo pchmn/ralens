@@ -120,9 +120,11 @@ export function CreateEventForm({
             onChangeText={(name) => setValues({ name })}
           />
         </Flex>
-        <Flex direction="row" align="center" gap="xl">
+        <Flex direction="row" align="center" gap="xl" wrap="wrap">
           <Flex height={24} width={24} />
-          {errors?.name && <Text color={theme.colors.error}>{t(`events.createEvent.${errors.name}`)}</Text>}
+          <Flex flex={1} direction="row" align="center" wrap="wrap">
+            {errors?.name && <Text color={theme.colors.error}>{t(`events.createEvent.${errors.name}`)}</Text>}
+          </Flex>
         </Flex>
       </Flex>
 
@@ -171,7 +173,9 @@ export function CreateEventForm({
         </Flex>
         <Flex direction="row" align="center" gap="xl">
           <Flex height={24} width={24} />
-          {errors?.endAt && <Text color={theme.colors.error}>{t(`events.createEvent.${errors.endAt}`)}</Text>}
+          <Flex flex={1} direction="row" align="center" wrap="wrap">
+            {errors?.endAt && <Text color={theme.colors.error}>{t(`events.createEvent.${errors.endAt}`)}</Text>}
+          </Flex>
         </Flex>
       </Flex>
 
