@@ -61,7 +61,8 @@
     "react-native-sensors": "^7.3.6",
     "react-native-svg": "13.9.0",
     "react-native-vision-camera": "^2.15.6",
-    "sentry-expo": "~7.0.0"
+    "sentry-expo": "~7.0.0",
+    "valibot": "^0.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

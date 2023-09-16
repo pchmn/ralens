@@ -166,6 +166,9 @@ importers:
       sentry-expo:
         specifier: ~7.0.0
         version: 7.0.1(expo-constants@14.4.2)(expo-device@5.4.0)(expo@49.0.8)(react-native@0.72.4)(react@18.2.0)
+      valibot:
+        specifier: ^0.15.0
+        version: 0.15.0
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -9745,6 +9748,10 @@ packages:
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: true
+
+  /valibot@0.15.0:
+    resolution: {integrity: sha512-OOE8+EeR/TO/uks08FGYe/6DJVIgkD4Ap3dkd8M4ws/bCaQUg3XDk1PGDFiAUJqyQilW/QZ5buBEA3R1gIgQ0g==}
+    dev: false
 
   /valid-url@1.0.9:
     resolution: {integrity: sha512-QQDsV8OnSf5Uc30CKSwG9lnhMPe6exHtTXLRYX8uMwKENy640pU+2BgBL0LRbDh/eYRahNCS7aewCx0wf3NYVA==}
