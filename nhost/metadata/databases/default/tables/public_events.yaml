@@ -46,9 +46,12 @@ select_permissions:
         - startAt
         - updatedAt
       filter:
-        participants:
-          userId:
-            _eq: X-Hasura-User-Id
+        _or:
+          - participants:
+              userId:
+                _eq: X-Hasura-User-Id
+          - creatorId:
+              _eq: X-Hasura-User-Id
 update_permissions:
   - role: anonymous
     permission:

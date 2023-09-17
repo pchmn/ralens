@@ -1,5 +1,6 @@
-import { Flex } from '@ralens/react-native';
-import { useState } from 'react';
+import { Event, SUBSCRIBE_EVENTS } from '@ralens/core';
+import { Flex, useSubscription } from '@ralens/react-native';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-native-paper';
 
 import { CameraModal } from '@/shared/components';
@@ -10,7 +11,11 @@ export default function Events() {
   const [cameraVisible, setCameraVisible] = useState(false);
   const [createEventVisible, setCreateEventVisible] = useState(false);
 
-  console.log('Events');
+  const { data: events } = useSubscription<Event[]>(SUBSCRIBE_EVENTS);
+
+  useEffect(() => {
+    console.log('events', events);
+  }, [events]);
 
   return (
     <>

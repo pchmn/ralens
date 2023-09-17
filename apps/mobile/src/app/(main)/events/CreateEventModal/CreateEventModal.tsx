@@ -1,4 +1,4 @@
-import { CREATE_EVENT, Event } from '@ralens/core';
+import { Event, EventParticipant, INSERT_EVENT, INSERT_EVENT_PARTICIPANT } from '@ralens/core';
 import { Flex, useAppTheme, useInsertMutation } from '@ralens/react-native';
 import { addDays } from 'date-fns';
 import { useMemo } from 'react';
@@ -41,7 +41,14 @@ export function CreateEventModal({ visible, onClose }: Props) {
 function CreateEvent({ onClose, onCreate }: { onClose: () => void; onCreate: (id: string) => void }) {
   const { t } = useTranslation();
 
-  const [create, { loading }] = useInsertMutation<Event>(CREATE_EVENT);
+  const [insertEvent, { loading: insertEventLoading }] = useInsertMutation<Event, { id: string }>(INSERT_EVENT);
+  const [insertEventParticipant, { loading: insertEventParticipantLoading, error }] = useInsertMutation<
+    EventParticipant,
+    { eventId: string; userId: string }
+  >(INSERT_EVENT_PARTICIPANT);
+  const loading = insertEventLoading || insertEventParticipantLoading;
+
+  console.log('error', error);
 
   const today = useMemo(() => {
     const today = new Date();
@@ -59,12 +66,11 @@ function CreateEvent({ onClose, onCreate }: { onClose: () => void; onCreate: (id
   });
 
   const onSubmit = async (values: CreateEventValues) => {
-    const { data } = await create(values);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (data && (data as any).insert_events_one?.id) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onCreate((data as any).insert_events_one?.id);
-    }
+    const { id } = await insertEvent(values);
+    await insertEventParticipant({
+      eventId: id,
+    });
+    onCreate(id);
   };
 
   return (
@@ -75,6 +81,7 @@ function CreateEvent({ onClose, onCreate }: { onClose: () => void; onCreate: (id
           mode="contained"
           onPress={() => handleSubmit(onSubmit)}
           labelStyle={{ marginVertical: 5, marginHorizontal: 5 }}
+          compact
           loading={loading}
         >
           {t('events.createEvent.create')}

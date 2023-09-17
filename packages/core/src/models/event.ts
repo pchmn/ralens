@@ -11,3 +11,10 @@ export interface Event extends BaseModel {
   endAt: Date;
   params: unknown;
 }
+
+export interface EventParticipant extends BaseModel {
+  eventId: string;
+  userId: string;
+  user: User;
+  role: 'participant' | 'editor' | 'owner';
+}
