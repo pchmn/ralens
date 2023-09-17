@@ -27,6 +27,7 @@
     "@react-native-firebase/app": "^18.3.0",
     "@react-native-firebase/messaging": "^18.3.0",
     "@react-navigation/native": "^6.1.7",
+    "@shopify/flash-list": "1.4.3",
     "apollo3-cache-persist": "^0.14.1",
     "date-fns": "^2.30.0",
     "expo": "~49.0.8",

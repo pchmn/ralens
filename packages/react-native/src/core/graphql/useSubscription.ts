@@ -15,8 +15,12 @@ export function useSubscription<T, P = OperationVariables>(
     variables: options as OperationVariables,
   });
 
-  if (!loading && JSON.stringify(Object.values(data as any)[0]) !== JSON.stringify(result)) {
-    setResult(Object.values(data as any)[0] as T);
+  if (!loading) {
+    if (data && JSON.stringify(Object.values(data as any)[0]) !== JSON.stringify(result)) {
+      setResult(Object.values(data as any)[0] as T);
+    } else if (data === undefined && result !== undefined) {
+      setResult(undefined);
+    }
   }
 
   return {

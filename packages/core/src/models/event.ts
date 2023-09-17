@@ -10,6 +10,7 @@ export interface Event extends BaseModel {
   startAt: Date;
   endAt: Date;
   params: unknown;
+  participants: EventParticipant[];
 }
 
 export interface EventParticipant extends BaseModel {

@@ -17,8 +17,18 @@ export const UPDATE_EVENT = `
 export const SUBSCRIBE_EVENTS = `
   subscription events {
     events {
-      name
       id
+      name
+      creator {
+        id
+        displayName
+      }
+      participants {
+        user {
+          id
+          displayName
+        }
+      }
     }
   }
 `;
