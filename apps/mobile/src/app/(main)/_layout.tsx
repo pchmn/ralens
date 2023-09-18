@@ -1,10 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useAppTheme } from '@ralens/react-native';
 import { withLayoutContext } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, View } from 'react-native';
+import { TouchableRipple } from 'react-native-paper';
 import {
   createMaterialBottomTabNavigator,
   MaterialBottomTabNavigationOptions,
 } from 'react-native-paper/react-navigation';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   FilmIcon,
@@ -23,12 +27,42 @@ export const unstable_settings = {
   initialRouteName: 'films/index',
 };
 
+export const BOTTOM_TABS_HEIGHT = 80;
+const tabRoutes = ['films/index', 'events/index', 'settings/index'];
+
 export default function MainLayout() {
   const theme = useAppTheme();
+  const [showTabBar, setShowTabBar] = useState(true);
+  const { bottom } = useSafeAreaInsets();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: showTabBar ? 0 : BOTTOM_TABS_HEIGHT + bottom,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim, showTabBar, bottom]);
 
   return (
     <>
-      <MaterialBottomTabs sceneAnimationEnabled sceneAnimationType="shifting" theme={theme}>
+      <MaterialBottomTabs
+        sceneAnimationEnabled
+        sceneAnimationType="shifting"
+        theme={theme}
+        screenOptions={({ navigation }) => {
+          const state = navigation.getState();
+          setShowTabBar(tabRoutes.includes(state.routeNames[state.index]));
+          return {
+            tabBarStyle: {
+              animated: true,
+              transform: [{ translateY: fadeAnim }],
+              position: 'absolute',
+            },
+          };
+        }}
+        renderTouchable={(props) => <Touchable {...props} />}
+      >
         <MaterialBottomTabs.Screen
           name="films/index"
           options={{
@@ -74,22 +108,31 @@ export default function MainLayout() {
   );
 }
 
-// const Touchable = ({ route, style, children, borderless, centered, rippleColor, ...rest }: any) => {
-//   console.log('route', route);
-//   return route.name === 'camera/index' ? null : TouchableRipple.supported ? (
-//     <TouchableRipple
-//       {...rest}
-//       disabled={rest.disabled || undefined}
-//       borderless={borderless}
-//       centered={centered}
-//       rippleColor={rippleColor}
-//       style={style}
-//     >
-//       {children}
-//     </TouchableRipple>
-//   ) : (
-//     <TouchableWithoutFeedback {...rest}>
-//       <View style={style}>{children}</View>
-//     </TouchableWithoutFeedback>
-//   );
-// };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Touchable = ({ route, style, children, centered, ...rest }: any) => {
+  const theme = useAppTheme();
+
+  return !tabRoutes.includes(route.name) ? null : (
+    <View {...rest} style={[style, { overflow: 'hidden', height: BOTTOM_TABS_HEIGHT }]}>
+      <TouchableRipple
+        onPress={rest.onPress}
+        rippleColor={theme.dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}
+        borderless
+        centered={centered}
+        style={{
+          position: 'absolute',
+          top: -20,
+          left: 0,
+          right: 0,
+          bottom: -20,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 80,
+        }}
+      >
+        {children}
+      </TouchableRipple>
+    </View>
+  );
+};
