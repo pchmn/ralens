@@ -65,11 +65,11 @@ export default function CreateEvent() {
   return (
     <SafeAreaView>
       <Flex direction="row" height={64} justify="space-between" align="center" pr="lg">
-        <IconButton icon={({ color }) => <ArrowLeftIcon color={color} />} onPress={reset} />
+        <IconButton icon={({ color }) => <ArrowLeftIcon color={color} />} onPress={goBack} />
         <Button
           mode="contained"
           onPress={() => handleSubmit(onSubmit)}
-          labelStyle={{ marginVertical: 5, marginHorizontal: 5 }}
+          labelStyle={{ marginVertical: 5 }}
           compact
           loading={loading}
         >
