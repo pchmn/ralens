@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ObjectSchema, ObjectShape, safeParse } from 'valibot';
 
 export function useForm<S extends ObjectShape, T>({
@@ -35,7 +35,6 @@ export function useForm<S extends ObjectShape, T>({
       validatedValues = result.output;
       callback?.(result.output);
     } else {
-      console.log(result.issues);
       let errors: { [key in keyof Partial<T>]: string } | undefined;
       result.issues?.forEach((issue) => {
         if (issue.path) {
@@ -49,5 +48,7 @@ export function useForm<S extends ObjectShape, T>({
     return { values: validatedValues, errors, isValid: result.success };
   };
 
-  return { values, setValues: handleChange, onChange, errors, handleSubmit };
+  const reset = useCallback(() => setValues({ ...initialValues }), [initialValues]);
+
+  return { values, setValues: handleChange, onChange, errors, handleSubmit, reset };
 }

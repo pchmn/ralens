@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useAppTheme } from '@ralens/react-native';
 import { withLayoutContext } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Animated, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import {
@@ -32,32 +32,34 @@ const tabRoutes = ['films/index', 'events/index', 'settings/index'];
 
 export default function MainLayout() {
   const theme = useAppTheme();
-  const [showTabBar, setShowTabBar] = useState(true);
   const { bottom } = useSafeAreaInsets();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: showTabBar ? 0 : BOTTOM_TABS_HEIGHT + bottom,
+  const toggleTabBar = (show: boolean) => {
+    Animated.timing(translateAnim, {
+      toValue: show ? 0 : BOTTOM_TABS_HEIGHT + bottom,
       duration: 150,
       useNativeDriver: true,
     }).start();
-  }, [fadeAnim, showTabBar, bottom]);
+  };
 
   return (
     <>
       <MaterialBottomTabs
         sceneAnimationEnabled
         sceneAnimationType="shifting"
+        backBehavior="history"
         theme={theme}
         screenOptions={({ navigation }) => {
           const state = navigation.getState();
-          setShowTabBar(tabRoutes.includes(state.routeNames[state.index]));
+          const currentRoute = state.routeNames[state.index];
+          toggleTabBar(tabRoutes.includes(currentRoute));
+
           return {
             tabBarStyle: {
-              animated: true,
-              transform: [{ translateY: fadeAnim }],
+              transform: [{ translateY: translateAnim }],
               position: 'absolute',
+              // display: tabRoutes.includes(currentRoute) ? 'flex' : 'none',
             },
           };
         }}

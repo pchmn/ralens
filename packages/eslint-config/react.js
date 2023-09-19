@@ -37,6 +37,16 @@ module.exports = {
             importNames: ['useSubscription'],
             message: 'Use `useSubscription` from `@ralens/react-native` instead.',
           },
+          {
+            name: 'expo-router',
+            importNames: ['useFocusEffect'],
+            message: 'Use `useFocusEffect` from `@ralens/react-native` instead.',
+          },
+          {
+            name: 'react-native-safe-area-context',
+            importNames: ['SafeAreaView'],
+            message: 'Use `SafeAreaView` from `@ralens/react-native` instead.',
+          },
         ],
       },
     ],
