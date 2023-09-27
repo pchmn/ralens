@@ -1,0 +1,46 @@
+{
+  "name": "@ralens/functions",
+  "version": "0.0.0",
+  "private": true,
+  "author": "pchmn",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "18"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "pnpm clean && esbuild src/fns/*/index.ts --bundle --minify --platform=node --target=node18 --outdir=dist --outbase=src/fns --sourcemap --metafile=meta.json --external:@google-cloud --external:@firebase --legal-comments=none",
+    "dev": "pnpm build --watch=forever | dotenv sam local start-api",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
+    "deploy:dev": "pnpm run deploy --config-env dev",
+    "deploy:prod": "pnpm run deploy --config-env prod",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.8.1",
+    "@logtail/node": "^0.4.0",
+    "@nhost/nhost-js": "^2.2.13",
+    "graphql": "^16.8.0",
+    "jsonwebtoken": "^9.0.1",
+    "valibot": "^0.15.0"
+  },
+  "devDependencies": {
+    "@ralens/core": "workspace:*",
+    "@ralens/eslint-config": "workspace:*",
+    "@ralens/tsconfig": "workspace:*",
+    "@types/aws-lambda": "^8.10.119",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/source-map-support": "^0.5.6",
+    "@vitest/coverage-c8": "^0.28.4",
+    "@vitest/ui": "^0.28.4",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.18.17",
+    "typescript": "^5.1.6",
+    "vite": "^4.1.1",
+    "vitest": "^0.28.4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "@ralens/tsconfig/base.json",
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "coverage", "src/__test__"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}

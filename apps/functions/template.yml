@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ralens
+
+  Sample SAM Template for ralens
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Parameters:
+  Environment:
+    Type: String
+    Default: local
+  Stage:
+    Type: String
+    Default: local
+
+Resources:
+  SendMessageFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: !Sub ralens-${Environment}-upload-file
+      CodeUri: dist/upload-file
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          APP_ENV: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:APP_ENV}}'
+          NHOST_JWT_SECRET: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_JWT_SECRET}}'
+          NHOST_ADMIN_SECRET: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_ADMIN_SECRET}}'
+          NHOST_AUTH_URL: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_AUTH_URL}}'
+          NHOST_GRAPHQL_URL: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_GRAPHQL_URL}}'
+          NHOST_STORAGE_URL: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_STORAGE_URL}}'
+          NHOST_FUNCTIONS_URL: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:NHOST_FUNCTIONS_URL}}'
+          BETTERSTACK_TOKEN: '{{resolve:secretsmanager:dev/lambda/upload-file:SecretString:BETTERSTACK_TOKEN}}'
+      Events:
+        SendMessage:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Auth:
+            Authorizer: 'NONE'
+          Properties:
+            Path: /upload-file
+            Method: post
+            RestApiId: !Ref ApiDeployment
+
+  ApiDeployment:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Sub ${Stage}

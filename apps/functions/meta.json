@@ -1,0 +1,34 @@
+{
+  "inputs": {
+    "src/fns/upload-file/index.ts": {
+      "bytes": 301,
+      "imports": [
+        {
+          "path": "aws-lambda",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "dist/upload-file/index.js.map": {
+      "imports": [],
+      "exports": [],
+      "inputs": {},
+      "bytes": 740
+    },
+    "dist/upload-file/index.js": {
+      "imports": [],
+      "exports": [],
+      "entryPoint": "src/fns/upload-file/index.ts",
+      "inputs": {
+        "src/fns/upload-file/index.ts": {
+          "bytesInOutput": 190
+        }
+      },
+      "bytes": 680
+    }
+  }
+}
