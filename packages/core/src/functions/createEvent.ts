@@ -1,4 +1,4 @@
-import { date, Input, object, string } from 'valibot';
+import { coerce, date, Input, object, string } from 'valibot';
 
 export const CreateEventSchema = object(
   {
@@ -16,8 +16,8 @@ export const CreateEventSchema = object(
         return { output: input };
       },
     ]),
-    startAt: date(),
-    endAt: date(),
+    startAt: coerce(date(), (i) => new Date(i as string | Date)),
+    endAt: coerce(date(), (i) => new Date(i as string | Date)),
   },
   [
     (input) => {

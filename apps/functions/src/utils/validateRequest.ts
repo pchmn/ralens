@@ -25,6 +25,7 @@ export function validateRequest<T extends FunctionName>(functionName: T, event: 
     currentToken = getDecodedToken(event);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    console.error(`${functionName} Error decoding jwt token`, JSON.stringify(error));
     logtail.error(`${functionName} Error decoding jwt token`, {
       error,
       params: { body: JSON.parse(event.body || '{}'), from: 'unknown' },
@@ -41,6 +42,7 @@ export function validateRequest<T extends FunctionName>(functionName: T, event: 
     parse(FunctionSchema[functionName], body);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    console.error(`${functionName} Invalid data`, JSON.stringify(error));
     logtail.error(`${functionName} Invalid data`, {
       error: { ...error },
       params: { body: JSON.parse(event.body || '{}'), from: currentToken.userId },

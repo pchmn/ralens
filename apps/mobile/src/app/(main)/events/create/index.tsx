@@ -1,13 +1,12 @@
-import { Event, EventParticipant, INSERT_EVENT, INSERT_EVENT_PARTICIPANT } from '@ralens/core';
-import { Flex, SafeAreaView, useFocusEffect, useInsertMutation } from '@ralens/react-native';
+import { Flex, SafeAreaView, useFocusEffect } from '@ralens/react-native';
 import { addDays } from 'date-fns';
 import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, IconButton } from 'react-native-paper';
 
 import { ArrowLeftIcon } from '@/shared/components';
-import { useForm } from '@/shared/hooks';
+import { useForm, useNhostFunctions } from '@/shared/hooks';
 
 import { CreateEventForm, CreateEventSchema, CreateEventValues } from './CreateEventForm';
 
@@ -16,12 +15,15 @@ export default function CreateEvent() {
 
   const { t } = useTranslation();
 
-  const [insertEvent, { loading: insertEventLoading }] = useInsertMutation<Event, { id: string }>(INSERT_EVENT);
-  const [insertEventParticipant, { loading: insertEventParticipantLoading }] = useInsertMutation<
-    EventParticipant,
-    { eventId: string; userId: string }
-  >(INSERT_EVENT_PARTICIPANT);
-  const loading = insertEventLoading || insertEventParticipantLoading;
+  const { call } = useNhostFunctions();
+
+  // const [insertEvent, { loading: insertEventLoading }] = useInsertMutation<Event, { id: string }>(INSERT_EVENT);
+  // const [insertEventParticipant, { loading: insertEventParticipantLoading }] = useInsertMutation<
+  //   EventParticipant,
+  //   { eventId: string; userId: string }
+  // >(INSERT_EVENT_PARTICIPANT);
+  // const loading = insertEventLoading || insertEventParticipantLoading;
+  const [loading, setLoading] = useState(false);
 
   const initialValues = useMemo(() => {
     const today = new Date();
@@ -40,11 +42,10 @@ export default function CreateEvent() {
   });
 
   const onSubmit = async (values: CreateEventValues) => {
-    const { id } = await insertEvent(values);
-    await insertEventParticipant({
-      eventId: id,
-    });
-    // onCreate(id);
+    setLoading(true);
+    await call('CreateEvent', values);
+    setLoading(false);
+
     goBack();
   };
 

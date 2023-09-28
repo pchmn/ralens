@@ -36,8 +36,7 @@ export const SUBSCRIBE_EVENTS = `
 export const INSERT_EVENT_PARTICIPANT = `
   mutation insert_event_participants_one($data: event_participants_insert_input!) {
     insert_event_participants_one(object: $data) {
-      eventId,
-      userId
+      eventId
     }
   }
 `;
