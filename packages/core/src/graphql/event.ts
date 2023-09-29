@@ -1,3 +1,5 @@
+import { Event } from '../models';
+
 export const INSERT_EVENT = `
   mutation insert_events_one($data: events_insert_input!) {
     insert_events_one(object: $data) {
@@ -29,9 +31,17 @@ export const SUBSCRIBE_EVENTS = `
           displayName
         }
       }
+      files_aggregate {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;
+export interface EventsResponse {
+  events: (Event & { files_aggregate: { aggregate: { count: number } } })[];
+}
 
 export const INSERT_EVENT_PARTICIPANT = `
   mutation insert_event_participants_one($data: event_participants_insert_input!) {

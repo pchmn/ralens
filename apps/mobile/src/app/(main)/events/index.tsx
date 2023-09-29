@@ -1,4 +1,4 @@
-import { Event, SUBSCRIBE_EVENTS } from '@ralens/core';
+import { Event, EventsResponse, SUBSCRIBE_EVENTS } from '@ralens/core';
 import {
   Flex,
   FlexTouchableRipple,
@@ -15,12 +15,23 @@ import { Dimensions } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
-const itemSize = width / 2 - spacingValue('xs') * 4;
+const itemSize = (width - spacingValue('sm') * 3) / 2;
+
+function mapResults(data: EventsResponse) {
+  const events = data.events.map((event) => ({
+    ...event,
+    fileCount: event.files_aggregate.aggregate.count,
+  }));
+
+  return events as (Event & { fileCount: number })[];
+}
 
 export default function Events() {
   const theme = useAppTheme();
 
-  const { data: events } = useSubscription<Event[]>(SUBSCRIBE_EVENTS);
+  const { data: events } = useSubscription(SUBSCRIBE_EVENTS, {
+    mapFn: mapResults,
+  });
 
   const router = useRouter();
 
@@ -29,7 +40,7 @@ export default function Events() {
   return (
     <SafeAreaView withBottomTabs>
       <Flex flex={1} align="center" justify="center">
-        <Flex width="100%" flex={1} p="xs">
+        <Flex width="100%" flex={1} p="sm">
           <FlashList
             numColumns={2}
             data={events}
@@ -37,15 +48,18 @@ export default function Events() {
               <FlexTouchableRipple
                 flex={1}
                 h={itemSize}
-                m="xs"
+                m="sm"
                 borderRadius={16}
                 bgColor={theme.colors.tertiaryContainer}
                 borderless
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onPress={() => {}}
               >
-                <Flex flex={1} p={20} justify="center" align="center">
-                  <Text>{item.name}</Text>
+                <Flex flex={1} justify="flex-end">
+                  <Flex bgColor="#000" px={20} py={10} gap="xs">
+                    <Text>{item.name}</Text>
+                    <Text>{item.fileCount}</Text>
+                  </Flex>
                 </Flex>
               </FlexTouchableRipple>
             )}
