@@ -12,7 +12,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { Dimensions } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Appbar, Button } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
 const itemSize = (width - spacingValue('sm') * 3) / 2;
@@ -39,6 +39,9 @@ export default function Events() {
 
   return (
     <SafeAreaView withBottomTabs>
+      <Appbar.Header statusBarHeight={0}>
+        <Appbar.Content title="Events" />
+      </Appbar.Header>
       <Flex flex={1} align="center" justify="center">
         <Flex width="100%" flex={1} p="sm">
           <FlashList
@@ -53,7 +56,7 @@ export default function Events() {
                 bgColor={theme.colors.tertiaryContainer}
                 borderless
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onPress={() => {}}
+                onPress={() => router.push(`/events/${item.id}`)}
               >
                 <Flex flex={1} justify="flex-end">
                   <Flex bgColor="#000" px={20} py={10} gap="xs">

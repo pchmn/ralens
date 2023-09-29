@@ -65,7 +65,7 @@ export default function CreateEvent() {
 
   return (
     <SafeAreaView>
-      <Flex direction="row" height={64} justify="space-between" align="center" pr="lg">
+      <Flex direction="row" height={64} justify="space-between" align="center" pl="xs" pr="lg">
         <IconButton icon={({ color }) => <ArrowLeftIcon color={color} />} onPress={goBack} />
         <Button
           mode="contained"
