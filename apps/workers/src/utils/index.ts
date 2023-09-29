@@ -1,2 +1,2 @@
-export * from './getCurrentToken';
+export * from './getContext';
 export * from './nhost';

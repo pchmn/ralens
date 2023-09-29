@@ -6,13 +6,13 @@
   "scripts": {
     "test": "jest --verbose",
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler publish src/index.ts"
+    "deploy": "wrangler deploy src/index.ts"
   },
   "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.8.1",
     "@hono/valibot-validator": "^0.2.0",
-    "@logtail/node": "^0.4.0",
+    "@logtail/edge": "^0.4.12",
     "@nhost/nhost-js": "^2.2.13",
     "@ralens/core": "workspace:*",
     "graphql": "^16.8.0",

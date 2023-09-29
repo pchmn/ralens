@@ -270,9 +270,9 @@ importers:
       '@hono/valibot-validator':
         specifier: ^0.2.0
         version: 0.2.0(hono@3.7.2)(valibot@0.15.0)
-      '@logtail/node':
-        specifier: ^0.4.0
-        version: 0.4.0
+      '@logtail/edge':
+        specifier: ^0.4.12
+        version: 0.4.12
       '@nhost/nhost-js':
         specifier: ^2.2.13
         version: 2.2.13(graphql@16.8.0)
@@ -1967,6 +1967,10 @@ packages:
     resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}
     dev: true
 
+  /@cloudflare/workers-types@4.20230922.0:
+    resolution: {integrity: sha512-0N3fg4uv9pS7PXMVYmEmEGs1P1yzMIsqym0sO//o2IjtZhsf7RwOozJtdazDAL0fBIWsl1PRX7BmKe92RV+5qw==}
+    dev: false
+
   /@commitlint/cli@17.1.2:
     resolution: {integrity: sha512-h/4Hlka3bvCLbnxf0Er2ri5A44VMlbMSkdTRp8Adv2tRiklSTRIoPGs7OEXDv3EoDs2AAzILiPookgM4Gi7LOw==}
     engines: {node: '>=v14'}
@@ -3346,6 +3350,18 @@ packages:
     dependencies:
       '@logtail/tools': 0.4.12
       '@logtail/types': 0.4.11
+    dev: false
+
+  /@logtail/edge@0.4.12:
+    resolution: {integrity: sha512-eInb/WGuUIwDho5bXi2JunwgSBSIM9vaKXxdlWE6GuSQqQIAqpLUhavmKtrOLfdikcs+goG2KxAasjRVFsfp/A==}
+    dependencies:
+      '@cloudflare/workers-types': 4.20230922.0
+      '@logtail/core': 0.4.12
+      '@logtail/types': 0.4.11
+      '@msgpack/msgpack': 2.8.0
+      '@types/stack-trace': 0.0.29
+      minimatch: 3.1.2
+      stack-trace: 0.0.10
     dev: false
 
   /@logtail/node@0.4.0:

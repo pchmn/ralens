@@ -1,4 +1,4 @@
-import { Context } from 'hono';
+import { Context, Env, Input } from 'hono';
 
 interface DecodedToken {
   userId: string;
@@ -25,4 +25,12 @@ export function getCurrentToken(c: Context) {
     exp: payload.exp,
     iss: payload.iss,
   } as DecodedToken;
+}
+
+export function getContext<E extends Env, N extends string, P extends Input>(c: Context<E, N, P>) {
+  return {
+    currentToken: getCurrentToken(c),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: c.req.valid('json' as any),
+  };
 }
