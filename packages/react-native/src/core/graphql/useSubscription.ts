@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line no-restricted-imports
-import { gql, OperationVariables, useSubscription as useApolloSubscription } from '@apollo/client';
+import {
+  gql,
+  OperationVariables,
+  SubscriptionHookOptions,
+  // eslint-disable-next-line no-restricted-imports
+  useSubscription as useApolloSubscription,
+} from '@apollo/client';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { DocumentNode } from 'graphql';
 import { useState } from 'react';
@@ -10,9 +16,8 @@ function mapResults<I = any, O = any>(data: I) {
 }
 
 export function useSubscription<T, I = any, V extends OperationVariables = OperationVariables>(
-  mutation: string | DocumentNode | TypedDocumentNode<T>,
-  options?: {
-    variables?: V;
+  mutation: string | DocumentNode | TypedDocumentNode<T, V>,
+  options?: SubscriptionHookOptions & {
     mapFn?: (data: I) => T;
   }
 ) {
