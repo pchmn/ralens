@@ -1,26 +1,6 @@
 import { CameraPermission } from './cameraPermission';
 import { MicrophonePermission } from './microphonePermission';
-
-export enum PermissionType {
-  CAMERA = 'camera',
-  MICROPHONE = 'microphone',
-  PHOTO_LIBRARY = 'photoLibrary',
-  NOTIFICATION = 'notification',
-}
-
-export type PermissionStatus = {
-  granted: boolean;
-  canAskAgain: boolean;
-  shouldShowRequestPermissionRationale?: boolean;
-};
-
-export interface PermissionModule {
-  type: PermissionType;
-
-  getStatus: () => Promise<PermissionStatus>;
-
-  request: () => Promise<PermissionStatus>;
-}
+import { PermissionModule, PermissionType } from './types';
 
 export class PermissionFactory {
   static create(type: PermissionType): PermissionModule {
