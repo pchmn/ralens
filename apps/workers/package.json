@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy src/index.ts"
+    "deploy": "wrangler deploy"
   },
   "license": "MIT",
   "dependencies": {
