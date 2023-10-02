@@ -1,22 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line no-restricted-imports
-import { gql, OperationVariables, useSubscription as useApolloSubscription } from '@apollo/client';
+import {
+  gql,
+  OperationVariables,
+  SubscriptionHookOptions,
+  // eslint-disable-next-line no-restricted-imports
+  useSubscription as useApolloSubscription,
+} from '@apollo/client';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { DocumentNode } from 'graphql';
 import { useState } from 'react';
 
-export function useSubscription<T, P = OperationVariables>(
-  mutation: string | DocumentNode | TypedDocumentNode<T>,
-  options?: P
+function mapResults<I = any, O = any>(data: I) {
+  return Object.values(data as any)[0] as O;
+}
+
+export function useSubscription<T, I = any, V extends OperationVariables = OperationVariables>(
+  mutation: string | DocumentNode | TypedDocumentNode<T, V>,
+  options?: SubscriptionHookOptions & {
+    mapFn?: (data: I) => T;
+  }
 ) {
+  const { variables, mapFn = mapResults } = options || {};
   const [result, setResult] = useState<T>();
 
-  const { data, loading, error } = useApolloSubscription<T>(typeof mutation === 'string' ? gql(mutation) : mutation, {
-    variables: options as OperationVariables,
+  const { data, loading, error } = useApolloSubscription<I>(typeof mutation === 'string' ? gql(mutation) : mutation, {
+    variables,
   });
 
-  if (!loading && JSON.stringify(Object.values(data as any)[0]) !== JSON.stringify(result)) {
-    setResult(Object.values(data as any)[0] as T);
+  if (!loading) {
+    if (data && JSON.stringify(mapFn(data)) !== JSON.stringify(result)) {
+      setResult(mapFn(data));
+    } else if (data === undefined && result !== undefined) {
+      setResult(undefined);
+    }
   }
 
   return {

@@ -1,6 +1,6 @@
 export type Spacing = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 
-export const spacingValues: Record<Spacing, number> = {
+const spacingValues: Record<Spacing, number> = {
   xs: 4,
   sm: 8,
   md: 12,
@@ -9,7 +9,8 @@ export const spacingValues: Record<Spacing, number> = {
   xxl: 24,
   xxxl: 28,
 };
-
+export function spacingValue(spacing: Spacing): number;
+export function spacingValue<T>(spacing?: T | Spacing): T | number | undefined;
 export function spacingValue<T>(spacing?: T | Spacing) {
   if (
     spacing === 'xs' ||

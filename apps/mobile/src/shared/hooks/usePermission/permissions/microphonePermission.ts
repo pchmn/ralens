@@ -2,7 +2,7 @@ import { checkPermission, requestPermission } from '@modules/permissions';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { Camera } from 'react-native-vision-camera';
 
-import { PermissionModule, PermissionType } from './permissionFactory';
+import { PermissionModule, PermissionType } from './types';
 
 export class MicrophonePermission implements PermissionModule {
   type = PermissionType.MICROPHONE;

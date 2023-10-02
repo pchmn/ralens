@@ -1,0 +1,33 @@
+{
+  "name": "hono-minimal",
+  "private": true,
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest --verbose",
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/client": "^3.8.1",
+    "@hono/valibot-validator": "^0.2.0",
+    "@logtail/edge": "^0.4.12",
+    "@nhost/nhost-js": "^2.2.13",
+    "@ralens/core": "workspace:*",
+    "graphql": "^16.8.0",
+    "hono": "^3.7.2",
+    "jsonwebtoken": "^9.0.1",
+    "valibot": "^0.15.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20221111.1",
+    "@ralens/eslint-config": "workspace:*",
+    "@ralens/tsconfig": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.3",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.15.15",
+    "typescript": "^5.1.6",
+    "wrangler": "^3.10.0"
+  }
+}

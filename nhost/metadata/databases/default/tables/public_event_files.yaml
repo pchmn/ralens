@@ -1,0 +1,43 @@
+table:
+  name: event_files
+  schema: public
+object_relationships:
+  - name: event
+    using:
+      foreign_key_constraint_on: eventId
+  - name: file
+    using:
+      foreign_key_constraint_on: fileId
+  - name: user
+    using:
+      foreign_key_constraint_on: userId
+insert_permissions:
+  - role: anonymous
+    permission:
+      check:
+        _and:
+          - event:
+              participants:
+                userId:
+                  _eq: X-Hasura-User-Id
+          - file:
+              uploaded_by_user_id:
+                _eq: X-Hasura-User-Id
+      set:
+        userId: x-hasura-User-Id
+      columns:
+        - eventId
+        - fileId
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - eventId
+        - fileId
+        - userId
+      filter:
+        event:
+          participants:
+            userId:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true

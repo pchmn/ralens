@@ -33,5 +33,18 @@
       "dismiss": "Annuler",
       "grantPermission": "Autoriser"
     }
+  },
+  "events" :{
+    "createEvent": {
+      "namePlaceholder": "Choisis un nom",
+      "from": "Du",
+      "to": "Au",
+      "at": "à",
+      "create": "Créer",
+      "nameRequiredError": "Le nom est obligatoire",
+      "startAt": "Début",
+      "endAt": "Fin",
+      "endAtSupStartAtError": "La date de fin doit être supérieure à la date de début"
+    }
   }
 }

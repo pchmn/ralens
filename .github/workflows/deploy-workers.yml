@@ -1,0 +1,55 @@
+name: Deploy Workers Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force deploy'
+        required: false
+        type: boolean
+        default: false
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - "apps/workers/**"
+      - ".github/workflows/deploy-workers.yml"
+
+jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRun: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: tj-actions/changed-files@v37
+        id: filter
+        with:
+          since_last_remote_commit: true
+          files: |
+            apps/workers/**
+            .github/workflows/deploy-workers.yml
+
+  deploy:
+    name: 🚀 Deploy Workers
+    needs: changes
+    if: needs.changes.outputs.shouldRun == 'true' || inputs.force == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
+          turbo-cache: true
+
+      - name: 🚀 Deploy
+        working-directory: apps/workers
+        run: pnpm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

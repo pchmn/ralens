@@ -4,6 +4,7 @@ import { BackHandler, StyleProp, ViewStyle } from 'react-native';
 import { Portal } from 'react-native-paper';
 import Animated, { Keyframe } from 'react-native-reanimated';
 import { BaseAnimationBuilder, EntryExitAnimationFunction } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function Modal({
   visible,
@@ -13,6 +14,8 @@ export function Modal({
   containerStyle,
   onDismiss,
   fullScreen,
+  insetsPadding,
+  bgColor,
 }: {
   children: ReactNode;
   visible: boolean;
@@ -21,7 +24,18 @@ export function Modal({
   containerStyle?: StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>;
   fullScreen?: boolean;
   onDismiss?: () => void;
+  insetsPadding?: boolean;
+  bgColor?: string;
 }) {
+  const { top, bottom } = useSafeAreaInsets();
+
+  const style = {
+    flex: fullScreen ? 1 : undefined,
+    paddingTop: insetsPadding ? top : undefined,
+    paddingBottom: insetsPadding ? bottom : undefined,
+    backgroundColor: bgColor,
+  };
+
   useEffectOnce(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
       if (onDismiss) {
@@ -37,11 +51,7 @@ export function Modal({
   return (
     <Portal>
       {visible && (
-        <Animated.View
-          entering={enteringAnimation}
-          exiting={exitingAnimation}
-          style={[fullScreen ? { flex: 1 } : undefined, containerStyle]}
-        >
+        <Animated.View entering={enteringAnimation} exiting={exitingAnimation} style={[style, containerStyle]}>
           {children}
         </Animated.View>
       )}

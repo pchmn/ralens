@@ -33,5 +33,18 @@
       "dismiss": "Dismiss",
       "grantPermission": "Grant permission"
     }
+  },
+  "events" :{
+    "createEvent": {
+      "namePlaceholder": "Choose a name",
+      "from": "From",
+      "to": "To",
+      "at": "at",
+      "create": "Create",
+      "nameRequiredError": "Name is required",
+      "startAt": "Start at",
+      "endAt": "End at",
+      "endAtSupStartAtError": "End date must be after start date"
+    }
   }
 }

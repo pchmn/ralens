@@ -10,5 +10,5 @@ export default function App() {
     return null;
   }
 
-  return <Redirect href="/films" />;
+  return <Redirect href="/films/" />;
 }

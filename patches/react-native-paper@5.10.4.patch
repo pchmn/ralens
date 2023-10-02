@@ -1,0 +1,144 @@
+diff --git a/lib/typescript/react-navigation/types.d.ts b/lib/typescript/react-navigation/types.d.ts
+index 21d81494011d0465dd581c0823cbab19ad72b46d..dbccb1bd621ab38e915c16cdc696f479faac2584 100644
+--- a/lib/typescript/react-navigation/types.d.ts
++++ b/lib/typescript/react-navigation/types.d.ts
+@@ -1,5 +1,6 @@
+ /// <reference types="react" />
+ import type { Descriptor, NavigationHelpers, NavigationProp, ParamListBase, RouteProp, TabActionHelpers, TabNavigationState } from '@react-navigation/native';
++import { Animated, StyleProp, ViewStyle } from 'react-native';
+ import type { BottomNavigation } from 'react-native-paper';
+ export declare type MaterialBottomTabNavigationEventMap = {
+     /**
+@@ -53,6 +54,7 @@ export declare type MaterialBottomTabNavigationOptions = {
+      * ID to locate this tab button in tests.
+      */
+     tabBarButtonTestID?: string;
++    tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+ };
+ export declare type MaterialBottomTabDescriptor = Descriptor<MaterialBottomTabNavigationOptions, MaterialBottomTabNavigationProp<ParamListBase>, RouteProp<ParamListBase>>;
+ export declare type MaterialBottomTabDescriptorMap = Record<string, MaterialBottomTabDescriptor>;
+diff --git a/src/components/BottomNavigation/BottomNavigation.tsx b/src/components/BottomNavigation/BottomNavigation.tsx
+index a2fbb5245660aba40d7db77adf173df4c86c9b74..99ccf5e767272aa84a601c079020b78a49cf4585 100644
+--- a/src/components/BottomNavigation/BottomNavigation.tsx
++++ b/src/components/BottomNavigation/BottomNavigation.tsx
+@@ -13,12 +13,12 @@ import {
+ 
+ import useLatestCallback from 'use-latest-callback';
+ 
+-import BottomNavigationBar from './BottomNavigationBar';
+-import BottomNavigationRouteScreen from './BottomNavigationRouteScreen';
+ import { useInternalTheme } from '../../core/theming';
+ import type { ThemeProp } from '../../types';
+ import useAnimatedValueArray from '../../utils/useAnimatedValueArray';
+ import type { IconSource } from '../Icon';
++import BottomNavigationBar from './BottomNavigationBar';
++import BottomNavigationRouteScreen from './BottomNavigationRouteScreen';
+ 
+ type BaseRoute = {
+   key: string;
+@@ -245,7 +245,7 @@ export type Props<Route extends BaseRoute> = {
+    * barStyle={{ backgroundColor: '#694fad' }}
+    * ```
+    */
+-  barStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
++  barStyle?:  (props: { route: Route }) => Animated.WithAnimatedValue<StyleProp<ViewStyle>> | Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+   /**
+    * Specifies the largest possible scale a label font can reach.
+    */
+diff --git a/src/components/BottomNavigation/BottomNavigationBar.tsx b/src/components/BottomNavigation/BottomNavigationBar.tsx
+index ef7ec268475c9009e9303ead85f00182c62db1d1..2dea6f16bdf6500eb4e3440128283f643b2e6156 100644
+--- a/src/components/BottomNavigation/BottomNavigationBar.tsx
++++ b/src/components/BottomNavigation/BottomNavigationBar.tsx
+@@ -15,11 +15,6 @@ import {
+ import color from 'color';
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ 
+-import {
+-  getActiveTintColor,
+-  getInactiveTintColor,
+-  getLabelColor,
+-} from './utils';
+ import { useInternalTheme } from '../../core/theming';
+ import overlay from '../../styles/overlay';
+ import { black, white } from '../../styles/themes/v2/colors';
+@@ -33,6 +28,11 @@ import Icon, { IconSource } from '../Icon';
+ import Surface from '../Surface';
+ import TouchableRipple from '../TouchableRipple/TouchableRipple';
+ import Text from '../Typography/Text';
++import {
++  getActiveTintColor,
++  getInactiveTintColor,
++  getLabelColor,
++} from './utils';
+ 
+ type BaseRoute = {
+   key: string;
+@@ -197,7 +197,7 @@ export type Props<Route extends BaseRoute> = {
+    * Specifies the largest possible scale a label font can reach.
+    */
+   labelMaxFontSizeMultiplier?: number;
+-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
++  style?: (props: { route: Route }) => Animated.WithAnimatedValue<StyleProp<ViewStyle>> | Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+   /**
+    * @optional
+    */
+@@ -600,7 +600,9 @@ const BottomNavigationBar = <Route extends BaseRoute>({
+               position: keyboardVisible ? 'absolute' : undefined,
+             }
+           : null,
+-        style,
++        typeof style === 'function' ? style({
++          route: routes[navigationState.index],
++        }) : style,
+       ]}
+       pointerEvents={
+         layout.measured
+diff --git a/src/react-navigation/types.tsx b/src/react-navigation/types.tsx
+index 4da78ef85aaa478205c148f9a2444cf4e790c4ee..103384c1aa7fc0c15c659db18c8ef58752dd382e 100644
+--- a/src/react-navigation/types.tsx
++++ b/src/react-navigation/types.tsx
+@@ -7,6 +7,7 @@ import type {
+   TabActionHelpers,
+   TabNavigationState,
+ } from '@react-navigation/native';
++import { Animated, StyleProp, ViewStyle } from 'react-native';
+ import type { BottomNavigation } from 'react-native-paper';
+ 
+ export type MaterialBottomTabNavigationEventMap = {
+@@ -91,6 +92,7 @@ export type MaterialBottomTabNavigationOptions = {
+    * ID to locate this tab button in tests.
+    */
+   tabBarButtonTestID?: string;
++  tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+ };
+ 
+ export type MaterialBottomTabDescriptor = Descriptor<
+diff --git a/src/react-navigation/views/MaterialBottomTabView.tsx b/src/react-navigation/views/MaterialBottomTabView.tsx
+index df846ae2fb3121a12315e66dcd252d802849938e..4a14eb8f6542a16f41a5f97195b6a608db49e0b9 100644
+--- a/src/react-navigation/views/MaterialBottomTabView.tsx
++++ b/src/react-navigation/views/MaterialBottomTabView.tsx
+@@ -27,6 +27,7 @@ export default function MaterialBottomTabView({
+   state,
+   navigation,
+   descriptors,
++  renderTouchable,
+   ...rest
+ }: Props) {
+   const buildLink = useLinkBuilder();
+@@ -37,6 +38,7 @@ export default function MaterialBottomTabView({
+       onIndexChange={noop}
+       navigationState={state}
+       renderScene={({ route }) => descriptors[route.key].render()}
++      barStyle={({ route }) => (descriptors[route.key].options.tabBarStyle)}
+       renderTouchable={
+         Platform.OS === 'web'
+           ? ({
+@@ -68,7 +70,7 @@ export default function MaterialBottomTabView({
+                 />
+               );
+             }
+-          : undefined
++          : renderTouchable
+       }
+       renderIcon={({ route, focused, color }) => {
+         const { options } = descriptors[route.key];

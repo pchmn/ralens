@@ -35,6 +35,7 @@ interface FlexProps {
   mb?: DimensionValue | Spacing;
   bgColor?: string;
   flex?: number;
+  flexShrink?: number;
   borderRadius?: AnimatableNumericValue;
   position?: 'absolute' | 'relative';
   display?: 'flex' | 'none';
@@ -66,6 +67,7 @@ export function Flex({
   mb,
   bgColor,
   style,
+  flexShrink = 1,
   onLayout,
   ...otherProps
 }: PropsWithChildren<FlexProps>) {
@@ -94,6 +96,7 @@ export function Flex({
           marginBottom: spacingValue(mb),
           backgroundColor: bgColor,
           gap: spacingValue(gap),
+          flexShrink,
           ...otherProps,
         },
         style,

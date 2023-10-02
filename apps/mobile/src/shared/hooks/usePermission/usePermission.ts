@@ -2,7 +2,8 @@ import { openSettings } from 'expo-linking';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
-import { PermissionFactory, PermissionModule, PermissionStatus, PermissionType } from './permissions/permissionFactory';
+import { PermissionFactory } from './permissions/permissionFactory';
+import { PermissionStatus, PermissionType } from './permissions/types';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

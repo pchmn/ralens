@@ -17,9 +17,9 @@ import Animated, {
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Camera as VisionCamera, PhotoFile } from 'react-native-vision-camera';
 
-import { CrossIcon } from '@/shared/components';
 import { PermissionType, useMandatoryPermission } from '@/shared/hooks';
 
+import { CrossIcon } from '../icons';
 import { Modal } from '../Modal/Modal';
 import { CaptureButton } from './CaptureButton';
 import { PermissionDialog } from './PermissionDialog';

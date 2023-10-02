@@ -24,18 +24,22 @@ export function useUpdateMutation<T>(mutation: string | DocumentNode | TypedDocu
   return [mutateUpdate, result] as const;
 }
 
-export function useInsertMutation<T>(mutation: string | DocumentNode | TypedDocumentNode<T>, options?: any) {
+export function useInsertMutation<T, R = unknown>(
+  mutation: string | DocumentNode | TypedDocumentNode<T>,
+  options?: any
+) {
   const [mutate, result] = useMutationApollo<unknown, { data: Partial<T> & { id?: string } }>(
     typeof mutation === 'string' ? gql(mutation) : mutation,
     options
   );
 
-  const mutateUpdate = useCallback(
-    (data: Partial<T> & { id?: string }) => {
-      return mutate({ variables: { data } });
+  const mutateInsert = useCallback(
+    async (data: Partial<T> & { id?: string }) => {
+      const result = await mutate({ variables: { data } });
+      return Object.values(result.data as any)[0] as R;
     },
     [mutate]
   );
 
-  return [mutateUpdate, result] as const;
+  return [mutateInsert, result] as const;
 }

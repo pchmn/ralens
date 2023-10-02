@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { PermissionType } from './permissions/permissionFactory';
+import { PermissionType } from './permissions/types';
 import { usePermission } from './usePermission';
 
 export function useMandatoryPermission(type: PermissionType, options?: { when: boolean }) {

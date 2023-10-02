@@ -1,13 +1,10 @@
 import { InMemoryCache } from '@apollo/client';
 import { NhostClient, NhostProvider } from '@nhost/react';
-import { NhostApolloProvider } from '@nhost/react-apollo';
 import { getSecureStorageInstance, UiProvider } from '@ralens/react-native';
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist';
 import { Slot, SplashScreen, withLayoutContext } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-// import createMaterialBottomTabNavigator from '@/shared/utils/materialBottomNav/createMaterialBottomTabNavigator';
-// import { MaterialBottomTabNavigationOptions } from '@/shared/utils/materialBottomNav/types';
 import {
   createMaterialBottomTabNavigator,
   MaterialBottomTabNavigationOptions,
@@ -15,6 +12,7 @@ import {
 import * as Sentry from 'sentry-expo';
 
 import { AuthProvider } from '@/core/auth';
+import { NhostApolloProvider } from '@/core/nhost';
 import { OnBoardProvider } from '@/core/onboard';
 
 const { Navigator } = createMaterialBottomTabNavigator();

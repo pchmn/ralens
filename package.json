@@ -27,5 +27,10 @@
     "lint-staged": "^11.2.3",
     "syncpack": "^10.7.3",
     "turbo": "^1.10.12"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "react-native-paper@5.10.4": "patches/react-native-paper@5.10.4.patch"
+    }
   }
 }

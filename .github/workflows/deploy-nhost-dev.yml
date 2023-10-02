@@ -16,6 +16,7 @@ on:
       - ready_for_review
     paths:
       - "nhost/**"
+      - ".github/workflows/deploy-nhost-dev.yml"
 
 jobs:
   changes:
@@ -31,6 +32,7 @@ jobs:
           since_last_remote_commit: true
           files: |
             nhost/**
+            .github/workflows/deploy-nhost-dev.yml
 
   deploy:
     name: 🚀 Deploy to Nhost
@@ -48,6 +50,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          git checkout -b ${{ github.head_ref }}
           git checkout -b deploy_dev
-          git merge ${{ github.ref_name }}
+          git merge ${{ github.head_ref }}
           git push -f origin deploy_dev
