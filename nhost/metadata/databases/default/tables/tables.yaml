@@ -11,5 +11,6 @@
 - "!include public_event_participants.yaml"
 - "!include public_events.yaml"
 - "!include public_installations.yaml"
+- "!include public_user_files.yaml"
 - "!include storage_buckets.yaml"
 - "!include storage_files.yaml"

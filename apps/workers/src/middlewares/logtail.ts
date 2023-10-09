@@ -86,7 +86,7 @@ async function logPrejwt(c: Context, next: Next) {
   const logger = getLogger(c);
 
   const { url, method, path } = c.req;
-  const body = JSON.parse(await c.req.raw.clone().text());
+  const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
   const request = {
     url,
     method,
@@ -112,7 +112,7 @@ async function logAfterJwt(c: Context, next: Next) {
   const logger = getLogger(c);
 
   const { url, method, path } = c.req;
-  const body = JSON.parse(await c.req.raw.clone().text());
+  const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
   const request = {
     url,
     method,

@@ -131,7 +131,7 @@ export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture:
               await ref.current?.focus(focusPoint);
             }}
           />
-          <Flex direction="row" justify="space-between" p="lg">
+          <Flex direction="row" justify="space-between" px="xs" py="sm">
             {cameraPermissionStatus?.granted && <CloseButton onPress={onClose} />}
           </Flex>
           <Flex gap="xl" pb={30}>
