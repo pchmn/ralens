@@ -37,7 +37,7 @@ export class Nhost {
     return Nhost.instance;
   }
 
-  async gql<T, R = any>(query: string, variables: Partial<T>) {
+  async gql<T, R = any>(query: string, variables: T) {
     const res = await Nhost.instance.client.graphql.request(query, {
       data: variables,
     } as any);

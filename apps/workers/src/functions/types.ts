@@ -1,20 +1,23 @@
 import { FunctionName, FunctionSchema } from '@ralens/core';
-import { Context, Env, MiddlewareHandler, ValidationTargets } from 'hono';
+import { Context, Env, Input as HonoInput, MiddlewareHandler, ValidationTargets } from 'hono';
 import { Input, Output } from 'valibot';
 
-type Target = keyof ValidationTargets;
-export type ValidatedBody<Fn extends FunctionName, T extends Target = 'json'> = {
+export type Target = keyof ValidationTargets;
+type FunctionWithSchema = keyof typeof FunctionSchema;
+export type ValidatedBody<Fn extends FunctionWithSchema, T extends Target = 'json'> = {
   in: { [K in T]: Input<typeof FunctionSchema[Fn]> };
-  out: { [K_1 in T]: Output<typeof FunctionSchema[Fn]> };
+  out: { [K in T]: Output<typeof FunctionSchema[Fn]> };
 };
-export type FunctionContext<Fn extends FunctionName, T extends Target = 'json'> = Context<
-  Env,
-  Fn,
-  ValidatedBody<Fn, T>
->;
+export type FunctionContext<Fn extends FunctionName, I extends HonoInput> = Context<Env, Fn, I>;
+export type FunctionContextWithSchema<Fn extends FunctionWithSchema> = Context<Env, Fn, ValidatedBody<Fn, 'json'>>;
 
-export type FunctionDefinition<T extends FunctionName = FunctionName> = {
-  name: T;
-  handler: (c: FunctionContext<T>) => Promise<Response>;
-  validator?: MiddlewareHandler<Env, T, ValidatedBody<T>>;
+export type FunctionDefinition<Fn extends FunctionName = FunctionName, I extends HonoInput = HonoInput> = {
+  name: Fn;
+  handler: (c: FunctionContext<Fn, I>) => Promise<Response>;
+  validator?: MiddlewareHandler<Env, Fn, I>;
+};
+
+export type FunctionInput<P, T extends Target = 'form'> = {
+  in: { [K in T]: P };
+  out: { [K in T]: P };
 };

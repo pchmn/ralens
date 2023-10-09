@@ -8,22 +8,26 @@ import {
   UPSERT_BUCKET,
   UserFile,
 } from '@ralens/core';
+import { validator } from 'hono/validator';
 
-import { getCurrentToken, Nhost } from '@/utils';
+import { getContext, Nhost } from '@/utils';
 
-import { FunctionContext, FunctionDefinition } from './types';
+import { FunctionContext, FunctionDefinition, FunctionInput } from './types';
 
-async function uploadFile(c: FunctionContext<'UploadFile'>) {
-  const { userId } = getCurrentToken(c);
-  const eventId = c.req.header('x-event-id');
+async function uploadFile(c: FunctionContext<'UploadFile', FunctionInput<{ file: File; eventId: string }>>) {
+  const {
+    currentToken: { userId },
+    body: { file, eventId },
+  } = getContext(c, 'form');
   const bucketId = eventId || userId;
   const nhost = Nhost.getInstance(c);
 
-  const formData = await c.req.formData();
+  const formData = new FormData();
+  formData.append('file[]', file);
+  formData.append('bucket-id', bucketId);
   await nhost.gql<InsertBucketParams, InsertResponse>(UPSERT_BUCKET, {
     id: bucketId,
   });
-  formData.append('bucket-id', bucketId);
   const { fileMetadata, error } = await nhost.uploadFile(formData);
 
   if (error) {
@@ -43,12 +47,23 @@ async function uploadFile(c: FunctionContext<'UploadFile'>) {
   }
 
   return c.json({
-    id: 'unknonw',
+    id: fileMetadata.id,
   });
 }
 
-export const uploadFileFunction: FunctionDefinition = {
+const validatorFormData = validator('form', (value, c) => {
+  const file = value['file[]'];
+  if (!file || !(file instanceof File)) {
+    return c.json({ error: 'File is required' }, 400);
+  }
+  if (!c.req.header('x-event-id')) {
+    return c.json({ error: 'Event id is required' }, 400);
+  }
+  return { file, eventId: c.req.header('x-event-id') };
+});
+
+export const uploadFileFunction: FunctionDefinition<'UploadFile', FunctionInput<{ file: File; eventId: string }>> = {
   name: 'UploadFile',
-  // validator: vValidator('json', FunctionSchema.UploadFile),
+  validator: validatorFormData,
   handler: uploadFile,
 };

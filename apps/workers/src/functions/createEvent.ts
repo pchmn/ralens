@@ -4,9 +4,9 @@ import { HTTPException } from 'hono/http-exception';
 
 import { getContext, Nhost } from '@/utils';
 
-import { FunctionContext, FunctionDefinition } from './types';
+import { FunctionContextWithSchema, FunctionDefinition } from './types';
 
-async function createEvent(c: FunctionContext<'CreateEvent'>) {
+async function createEvent(c: FunctionContextWithSchema<'CreateEvent'>) {
   const {
     currentToken: { userId },
     body,
@@ -14,7 +14,7 @@ async function createEvent(c: FunctionContext<'CreateEvent'>) {
   const nhost = Nhost.getInstance(c);
 
   try {
-    const { data } = await nhost.gql<Event, { id: string }>(INSERT_EVENT, {
+    const { data } = await nhost.gql<Partial<Event>, { id: string }>(INSERT_EVENT, {
       name: body.name,
       startAt: body.startAt,
       endAt: body.endAt,
