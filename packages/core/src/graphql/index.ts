@@ -1,3 +1,4 @@
+export * from './buckets';
 export * from './events';
 export * from './installations';
 export * from './types';

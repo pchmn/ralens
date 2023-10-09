@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Buffer } from 'node:buffer';
 
 import { NhostClient, NhostClientConstructorParams } from '@nhost/nhost-js';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 
 export class Nhost {
-  private client: NhostClient;
+  public client: NhostClient;
   private static instance: Nhost;
   private authorizationHeader: string;
-
   private constructor(_params: NhostClientConstructorParams, _authorizationHeader: string) {
     this.client = new NhostClient(_params);
     this.authorizationHeader = _authorizationHeader;
@@ -53,27 +51,50 @@ export class Nhost {
     };
   }
 
-  async uploadFile({ name, content, type }: { name: string; content: string; type: string }) {
-    const formData = new FormData();
-    const bf = Buffer.from(content, 'base64');
-    const fileToSend = new File([bf], name, { type });
-    formData.append('file', fileToSend, name);
-
+  async uploadFile(formData: FormData) {
     const headers = {
-      // 'x-hasura-admin-secret': `${this.client.adminSecret}`,
       Authorization: `${this.authorizationHeader}`,
     };
 
-    const res = await fetch('https://local.storage.nhost.run/v1/files', {
+    const response = await fetch('https://local.storage.nhost.run/v1/files', {
       method: 'POST',
       body: formData,
       headers,
     });
 
-    const body = await res.json();
+    const responseData = (await response.json()) as StorageUploadFormDataResponse;
 
-    return {
-      id: (body as any).id as string,
-    };
+    if (!response.ok) {
+      const error: StorageErrorPayload = {
+        status: response.status,
+        message: responseData?.error?.message || response.statusText,
+        error: response.statusText,
+      };
+      return { error, fileMetadata: null };
+    }
+    return { fileMetadata: responseData.processedFiles?.[0] as FileResponse, error: null };
   }
+}
+
+export type StorageUploadFormDataResponse =
+  | { processedFiles: FileResponse[]; error: null }
+  | { processedFiles: null; error: StorageErrorPayload };
+
+export interface FileResponse {
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  etag: string;
+  createdAt: string;
+  bucketId: string;
+  isUploaded: true;
+  updatedAt: string;
+  uploadedByUserId: string;
+}
+
+export interface StorageErrorPayload {
+  error: string;
+  status: number;
+  message: string;
 }

@@ -1,13 +1,12 @@
+import { useAccessToken } from '@nhost/react';
 import { Flex, SafeAreaView, Text } from '@ralens/react-native';
-import { readAsStringAsync } from 'expo-file-system';
+import { FileSystemUploadType, uploadAsync } from 'expo-file-system';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { getType } from 'mime';
 import { useState } from 'react';
 import { Image } from 'react-native-compressor';
 import { Appbar, Button } from 'react-native-paper';
 
 import { ArrowLeftIcon, CameraModal } from '@/shared/components';
-import { useNhostFunctions } from '@/shared/hooks';
 
 export default function Event() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -15,7 +14,7 @@ export default function Event() {
 
   const [cameraModalVisible, setCameraModalVisible] = useState(false);
 
-  const { call } = useNhostFunctions();
+  const accessToken = useAccessToken();
 
   return (
     <>
@@ -37,16 +36,15 @@ export default function Event() {
         onClose={() => setCameraModalVisible(false)}
         onCapture={async (file) => {
           const result = await Image.compress(`file://${file.path}`);
-          const name = result.substring(result.lastIndexOf('/') + 1, result.length);
-          const base64 = await readAsStringAsync(result, { encoding: 'base64' });
 
-          await call('UploadFile', {
-            file: {
-              name,
-              content: `${base64}`,
-              type: getType(name) || 'image/jpeg',
+          await uploadAsync(`${process.env.EXPO_PUBLIC_NHOST_FUNCTIONS_URL}/UploadFile`, result, {
+            httpMethod: 'POST',
+            fieldName: 'file[]',
+            uploadType: FileSystemUploadType.MULTIPART,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'x-event-id': id,
             },
-            eventId: id,
           });
         }}
       />
