@@ -17,7 +17,7 @@ const upsertBucket = typedGql('mutation', { scalars })({
   insertBucket: [
     {
       object: {
-        id: $('id', 'uuid!'),
+        id: $('id', 'String!'),
       },
       on_conflict: { constraint: buckets_constraint.buckets_pkey, update_columns: [] },
     },
