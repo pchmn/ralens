@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { NhostGraphqlClient } from '@nhost/graphql-js';
-import { HasuraAuthClient, NhostClient, NhostClientConstructorParams } from '@nhost/nhost-js';
+import { HasuraAuthClient, HasuraStorageClient, NhostClient, NhostClientConstructorParams } from '@nhost/nhost-js';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 
@@ -10,12 +10,14 @@ export class Nhost {
 
   public graphql: NhostGraphqlClient;
   public auth: HasuraAuthClient;
+  public storage: HasuraStorageClient;
   private authorizationHeader: string;
 
   private constructor(_params: NhostClientConstructorParams, _authorizationHeader: string) {
     const client = new NhostClient(_params);
     this.graphql = client.graphql;
     this.auth = client.auth;
+    this.storage = client.storage;
     this.authorizationHeader = _authorizationHeader;
   }
 
@@ -48,7 +50,7 @@ export class Nhost {
       Authorization: `${this.authorizationHeader}`,
     };
 
-    const response = await fetch('https://local.storage.nhost.run/v1/files', {
+    const response = await fetch(`${this.storage.url}/files`, {
       method: 'POST',
       body: formData,
       headers,

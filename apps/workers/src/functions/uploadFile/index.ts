@@ -65,6 +65,7 @@ async function uploadFile(c: FunctionContext<'UploadFile', FunctionInput<UploadF
   } = getContext(c, 'form');
   const bucketId = eventId || userId;
   const nhost = Nhost.getInstance(c);
+  const logger = c.get('logtail');
 
   const formData = new FormData();
   formData.append('file[]', file);
@@ -76,6 +77,12 @@ async function uploadFile(c: FunctionContext<'UploadFile', FunctionInput<UploadF
   if (error) {
     throw error;
   }
+
+  logger.info('[UploadFile] File uploaded', {
+    fileMetadata,
+    userId,
+    eventId,
+  });
 
   await nhost.graphql.request(insertUserFile, {
     fileId: fileMetadata.id,

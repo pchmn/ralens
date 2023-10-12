@@ -37,55 +37,13 @@ export function logtail(options?: LogtailOptions): MiddlewareHandler {
     return logPrejwt;
   }
   return logAfterJwt;
-  return async (c, next) => {
-    const logger = getLogger(c);
-    const { method, path } = c.req;
-    const clonedReq = c.req.raw.clone();
-    const body = await clonedReq.text();
-    const request = {
-      url: c.req.url,
-      method: c.req.method,
-      body,
-    };
-
-    logger.info(`[${method}] ${path}`, {
-      request,
-    });
-
-    const start = Date.now();
-
-    await next();
-
-    if (c.error) {
-      console.log('error, c.error', c.error.name, c.error.message, c.res.status, c.res.body);
-      logger.error(`[${method}] ${path}`, {
-        request,
-        context: c.executionCtx,
-        executionTime: time(start),
-        error: c.error,
-        response: {
-          body: c.res.body,
-          status: c.res.status,
-        },
-      });
-    } else {
-      console.log('success', c.res.status);
-      logger.info(`[${method}] ${path}`, {
-        request,
-        executionTime: time(start),
-        response: {
-          body: c.res.body,
-          status: c.res.status,
-        },
-      });
-    }
-  };
 }
 
 async function logPrejwt(c: Context, next: Next) {
   const logger = getLogger(c);
 
   const { url, method, path } = c.req;
+  const functionName = path.split('/').pop();
   const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
   const request = {
     url,
@@ -96,7 +54,7 @@ async function logPrejwt(c: Context, next: Next) {
   await next();
 
   if (c.error && c.res.status === 401) {
-    logger.error(`[${path}] Unhautorized`, {
+    logger.error(`[${functionName}] Unhautorized`, {
       request,
       context: c.executionCtx,
       error: c.error,
@@ -112,6 +70,7 @@ async function logAfterJwt(c: Context, next: Next) {
   const logger = getLogger(c);
 
   const { url, method, path } = c.req;
+  const functionName = path.split('/').pop();
   const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
   const request = {
     url,
@@ -121,14 +80,14 @@ async function logAfterJwt(c: Context, next: Next) {
 
   const start = Date.now();
 
-  logger.info(`[${path}] Call`, {
+  logger.info(`[${functionName}] Call`, {
     request,
   });
 
   await next();
 
   if (c.error) {
-    logger.error(`[${path}] Error`, {
+    logger.error(`[${functionName}] Error`, {
       request,
       executionTime: time(start),
       error: c.error,
@@ -138,7 +97,7 @@ async function logAfterJwt(c: Context, next: Next) {
       },
     });
   } else {
-    logger.info(`[${path}] Success`, {
+    logger.info(`[${functionName}] Success`, {
       request,
       executionTime: time(start),
       response: {

@@ -1,4 +1,5 @@
 import { $, scalars, typedGql } from '@ralens/core';
+import { HTTPException } from 'hono/http-exception';
 import { validator } from 'hono/validator';
 
 import { Nhost } from '@/utils';
@@ -16,18 +17,18 @@ export const validatorFormData = validator('form', async (value, c) => {
   // Check file
   const file = value['file[]'];
   if (!file || !(file instanceof File)) {
-    return c.json({ error: 'File is required' }, 400);
+    throw new HTTPException(400, { message: 'File is required' });
   }
 
   // Check event id
   const eventId = c.req.header('x-event-id');
   if (!eventId) {
-    return c.json({ error: 'Event id is required' }, 400);
+    throw new HTTPException(400, { message: 'Event id is required' });
   }
   const nhost = Nhost.getInstance(c);
   const res = await nhost.graphql.request(getEvent, { id: eventId });
   if (res.error || !res.data.events_by_pk) {
-    return c.json({ error: 'Event not found' }, 404);
+    throw new HTTPException(404, { message: 'Event not found' });
   }
 
   return { file, eventId };
