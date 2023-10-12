@@ -1,15 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { NhostClient, NhostClientConstructorParams } from '@nhost/nhost-js';
+import { NhostGraphqlClient } from '@nhost/graphql-js';
+import { HasuraAuthClient, NhostClient, NhostClientConstructorParams } from '@nhost/nhost-js';
 import { Context } from 'hono';
 import { env } from 'hono/adapter';
 
 export class Nhost {
-  public client: NhostClient;
   private static instance: Nhost;
+
+  public graphql: NhostGraphqlClient;
+  public auth: HasuraAuthClient;
   private authorizationHeader: string;
+
   private constructor(_params: NhostClientConstructorParams, _authorizationHeader: string) {
-    this.client = new NhostClient(_params);
+    const client = new NhostClient(_params);
+    this.graphql = client.graphql;
+    this.auth = client.auth;
     this.authorizationHeader = _authorizationHeader;
   }
 
@@ -38,7 +44,7 @@ export class Nhost {
   }
 
   async gql<T, R = any>(query: string, variables: T) {
-    const res = await Nhost.instance.client.graphql.request(query, {
+    const res = await Nhost.instance.graphql.request(query, {
       data: variables,
     } as any);
 
