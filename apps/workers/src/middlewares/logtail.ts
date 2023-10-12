@@ -15,7 +15,7 @@ let logger: EdgeWithExecutionContext;
 
 function getLogger(c: Context, withUser = true) {
   if (!client) {
-    client = new Logtail(c.env.BETTERSTACK_TOKEN || 'mkVeQxAtqHyrr2T3weupfZRS');
+    client = new Logtail(c.env.BETTERSTACK_TOKEN || 'unknown');
     if (withUser) {
       client.use(async (log) => ({
         ...log,
@@ -86,13 +86,14 @@ async function logAfterJwt(c: Context, next: Next) {
 
   await next();
 
+  const text = await c.res.clone().text();
   if (c.error) {
     logger.error(`[${functionName}] Error`, {
       request,
       executionTime: time(start),
       error: c.error,
       response: {
-        body: JSON.parse(await c.res.clone().text()),
+        body: text,
         status: c.res.status,
       },
     });
@@ -101,7 +102,7 @@ async function logAfterJwt(c: Context, next: Next) {
       request,
       executionTime: time(start),
       response: {
-        body: JSON.parse(await c.res.clone().text()),
+        body: text,
         status: c.res.status,
       },
     });
