@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { $, buckets_constraint, scalars, typedGql } from '@ralens/core';
+import { HTTPException } from 'hono/http-exception';
 
-import { getContext, Nhost } from '@/utils';
+import { getContext, getErrorMessage, Nhost } from '@/utils';
 
 import { FunctionContext, FunctionDefinition, FunctionInput } from '../types';
 import { validatorFormData } from './validator';
@@ -71,11 +72,22 @@ async function uploadFile(c: FunctionContext<'UploadFile', FunctionInput<UploadF
   formData.append('file[]', file);
   formData.append('bucket-id', bucketId);
   // @ts-ignore
-  await nhost.graphql.request(upsertBucket, { id: bucketId });
-  const { fileMetadata, error } = await nhost.uploadFile(formData);
+  const { error: upsertError } = await nhost.graphql.request(upsertBucket, { id: bucketId });
 
-  if (error) {
-    throw error;
+  if (upsertError) {
+    throw new HTTPException(500, {
+      message: getErrorMessage(upsertError, { prefix: `Error upserting bucketId ${bucketId}` }),
+    });
+  }
+
+  const { fileMetadata, error: uploadError } = await nhost.uploadFile(formData);
+
+  if (uploadError) {
+    throw new HTTPException(500, {
+      message: getErrorMessage(uploadError, {
+        prefix: `Error uploading file ${file.name}`,
+      }),
+    });
   }
 
   logger.info('[UploadFile] File uploaded', {
