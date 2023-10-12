@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { $, buckets_constraint, scalars, typedGql } from '@ralens/core';
-import { validator } from 'hono/validator';
 
 import { getContext, Nhost } from '@/utils';
 
-import { FunctionContext, FunctionDefinition, FunctionInput } from './types';
+import { FunctionContext, FunctionDefinition, FunctionInput } from '../types';
+import { validatorFormData } from './validator';
+
+type UploadFileInput = {
+  file: File;
+  eventId: string;
+};
 
 // @ts-ignore
 const upsertBucket = typedGql('mutation', { scalars })({
@@ -93,40 +98,6 @@ async function uploadFile(c: FunctionContext<'UploadFile', FunctionInput<UploadF
     id: fileMetadata.id,
   });
 }
-
-const query = typedGql('query', { scalars })({
-  events_by_pk: [
-    { id: $('id', 'uuid!') },
-    {
-      id: true,
-    },
-  ],
-});
-
-type UploadFileInput = {
-  file: File;
-  eventId: string;
-};
-const validatorFormData = validator('form', async (value, c) => {
-  // Check file
-  const file = value['file[]'];
-  if (!file || !(file instanceof File)) {
-    return c.json({ error: 'File is required' }, 400);
-  }
-
-  // Check event id
-  const eventId = c.req.header('x-event-id');
-  if (!eventId) {
-    return c.json({ error: 'Event id is required' }, 400);
-  }
-  const nhost = Nhost.getInstance(c);
-  const res = await nhost.graphql.request(query, { id: eventId });
-  if (res.error || !res.data.events_by_pk) {
-    return c.json({ error: 'Event not found' }, 404);
-  }
-
-  return { file, eventId };
-});
 
 export const uploadFileFunction: FunctionDefinition<'UploadFile', FunctionInput<UploadFileInput>> = {
   name: 'UploadFile',

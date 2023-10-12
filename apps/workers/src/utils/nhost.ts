@@ -43,20 +43,6 @@ export class Nhost {
     return Nhost.instance;
   }
 
-  async gql<T, R = any>(query: string, variables: T) {
-    const res = await Nhost.instance.graphql.request(query, {
-      data: variables,
-    } as any);
-
-    if (res.error) {
-      throw res.error;
-    }
-
-    return {
-      data: Object.values(res.data as any)[0] as R,
-    };
-  }
-
   async uploadFile(formData: FormData) {
     const headers = {
       Authorization: `${this.authorizationHeader}`,
