@@ -38,7 +38,7 @@ export function Modal({
 
   useEffectOnce(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (onDismiss) {
+      if (visible && onDismiss) {
         onDismiss();
         return true;
       }
