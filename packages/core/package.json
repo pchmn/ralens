@@ -6,6 +6,9 @@
   "license": "MIT",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "scripts": {
+    "gql": "zeus https://local.graphql.nhost.run/v1 ./src --typedDocumentNode --header='X-Hasura-Admin-Secret:nhost-admin-secret'"
+  },
   "peerDependencies": {
     "valibot": "^0.15.0"
   },
@@ -13,6 +16,7 @@
     "@nhost/nhost-js": "^2.2.13",
     "@ralens/eslint-config": "workspace:*",
     "@ralens/tsconfig": "workspace:*",
+    "graphql-zeus": "^5.3.1",
     "typescript": "^5.1.6",
     "valibot": "^0.15.0"
   }

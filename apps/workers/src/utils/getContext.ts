@@ -1,5 +1,7 @@
 import { Context, Env, Input } from 'hono';
 
+import { Target } from '@/functions/types';
+
 interface DecodedToken {
   userId: string;
   defaultRole: string;
@@ -27,10 +29,13 @@ export function getCurrentToken(c: Context) {
   } as DecodedToken;
 }
 
-export function getContext<E extends Env, N extends string, P extends Input>(c: Context<E, N, P>) {
+export function getContext<E extends Env, N extends string, P extends Input>(
+  c: Context<E, N, P>,
+  target: Target = 'json'
+) {
   return {
     currentToken: getCurrentToken(c),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body: c.req.valid('json' as any),
+    body: c.req.valid(target as any),
   };
 }

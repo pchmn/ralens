@@ -13,9 +13,15 @@ export interface Event extends BaseModel {
   participants: EventParticipant[];
 }
 
-export interface EventParticipant extends BaseModel {
+export interface EventParticipant extends BaseModel<false> {
   eventId: string;
   userId: string;
   user: User;
   role: 'participant' | 'editor' | 'owner';
+}
+
+export interface EventFile extends BaseModel<false> {
+  eventId: string;
+  fileId: string;
+  userId: string;
 }

@@ -6,8 +6,8 @@ import { StyleSheet } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import Animated, {
   Easing,
-  FadeInDown,
-  FadeOut,
+  FadeInRight,
+  FadeOutRight,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -44,8 +44,8 @@ export function CameraModal({
       visible={visible}
       onDismiss={onClose}
       fullScreen
-      enteringAnimation={FadeInDown.duration(200)}
-      exitingAnimation={FadeOut.duration(200)}
+      enteringAnimation={FadeInRight.duration(300)}
+      exitingAnimation={FadeOutRight.duration(300)}
     >
       <Camera onClose={onClose} onCapture={onCapture} />
     </Modal>
@@ -131,7 +131,7 @@ export function Camera({ onClose, onCapture }: { onClose: () => void; onCapture:
               await ref.current?.focus(focusPoint);
             }}
           />
-          <Flex direction="row" justify="space-between" p="lg">
+          <Flex direction="row" justify="space-between" px="xs" py="sm">
             {cameraPermissionStatus?.granted && <CloseButton onPress={onClose} />}
           </Flex>
           <Flex gap="xl" pb={30}>

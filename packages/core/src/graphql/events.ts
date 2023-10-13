@@ -1,4 +1,4 @@
-import { Event } from '../models';
+import { Event, EventFile } from '../models';
 
 export const INSERT_EVENT = `
   mutation insert_events_one($data: events_insert_input!) {
@@ -50,3 +50,15 @@ export const INSERT_EVENT_PARTICIPANT = `
     }
   }
 `;
+
+export const INSERT_EVENT_FILE = `
+  mutation insert_event_files_one($data: event_files_insert_input!) {
+    insert_event_files_one(object: $data) {
+      eventId
+      fileId
+      userId
+    }
+  }
+`;
+export type InsertEventFileParams = Pick<EventFile, 'eventId' | 'fileId' | 'userId'>;
+export type InsertEventFileResponse = InsertEventFileParams;

@@ -83,6 +83,7 @@ const config: ExpoConfig = {
     './plugins/build/withPodFile',
     './plugins/build/withTransparentNavigationBar',
     'react-native-vision-camera',
+    'react-native-compressor',
     [
       'expo-build-properties',
       {
@@ -98,7 +99,6 @@ const config: ExpoConfig = {
         },
       },
     ],
-    'react-native-vision-camera',
   ],
   hooks: {
     postPublish: [

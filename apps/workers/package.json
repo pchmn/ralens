@@ -10,7 +10,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@apollo/client": "^3.8.1",
     "@hono/valibot-validator": "^0.2.0",
     "@logtail/edge": "^0.4.12",
     "@nhost/nhost-js": "^2.2.13",
