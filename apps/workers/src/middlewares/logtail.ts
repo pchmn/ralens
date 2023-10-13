@@ -10,19 +10,22 @@ declare module 'hono' {
   }
 }
 
-let client: Logtail;
-let logger: EdgeWithExecutionContext;
+let logger: EdgeWithExecutionContext | Console;
 
 function getLogger(c: Context, withUser = true) {
-  if (!client) {
-    client = new Logtail(c.env.BETTERSTACK_TOKEN || 'unknown');
-    if (withUser) {
-      client.use(async (log) => ({
-        ...log,
-        userId: getContext(c).currentToken.userId,
-      }));
+  if (!logger) {
+    if (c.env.BETTERSTACK_TOKEN) {
+      const client = new Logtail(c.env.BETTERSTACK_TOKEN);
+      if (withUser) {
+        client.use(async (log) => ({
+          ...log,
+          userId: getContext(c).currentToken.userId,
+        }));
+      }
+      logger = client.withExecutionContext(c.executionCtx);
+    } else {
+      logger = console;
     }
-    logger = client.withExecutionContext(c.executionCtx);
   }
   c.set('logtail', logger);
   return logger;
@@ -40,26 +43,19 @@ export function logtail(options?: LogtailOptions): MiddlewareHandler {
 }
 
 async function logPrejwt(c: Context, next: Next) {
-  const logger = getLogger(c);
+  const logger = getLogger(c, false);
 
-  const { url, method, path } = c.req;
-  const functionName = path.split('/').pop();
-  const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
-  const request = {
-    url,
-    method,
-    body,
-  };
+  const { functionName, request } = await getRequestContext(c);
 
   await next();
 
-  if (c.error && c.res.status === 401) {
+  if (c.error || c.res.status === 401) {
     logger.error(`[${functionName}] Unhautorized`, {
       request,
       context: c.executionCtx,
       error: c.error,
       response: {
-        body: JSON.parse(await c.res.clone().text()),
+        body: await c.res.clone().text(),
         status: c.res.status,
       },
     });
@@ -69,14 +65,7 @@ async function logPrejwt(c: Context, next: Next) {
 async function logAfterJwt(c: Context, next: Next) {
   const logger = getLogger(c);
 
-  const { url, method, path } = c.req;
-  const functionName = path.split('/').pop();
-  const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
-  const request = {
-    url,
-    method,
-    body,
-  };
+  const { functionName, request } = await getRequestContext(c);
 
   const start = Date.now();
 
@@ -107,6 +96,32 @@ async function logAfterJwt(c: Context, next: Next) {
       },
     });
   }
+}
+
+async function getRequestContext(c: Context) {
+  const { url, method, path } = c.req;
+
+  const functionName = path.split('/').pop();
+
+  const body = c.req.header('Content-Type') === 'application/json' ? JSON.parse(await c.req.raw.clone().text()) : {};
+
+  const headers: Record<string, string> = {};
+  for (const [key, value] of c.req.raw.headers.entries()) {
+    if (key === 'authorization' || key === 'cookie') continue;
+    headers[key] = value;
+  }
+
+  const request = {
+    url,
+    method,
+    body,
+    headers,
+  };
+
+  return {
+    functionName,
+    request,
+  };
 }
 
 const humanize = (times: string[]) => {
