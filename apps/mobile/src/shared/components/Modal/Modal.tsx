@@ -1,5 +1,4 @@
-import { useEffectOnce } from '@ralens/react-native';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { BackHandler, StyleProp, ViewStyle } from 'react-native';
 import { Portal } from 'react-native-paper';
 import Animated, { Keyframe } from 'react-native-reanimated';
@@ -36,8 +35,9 @@ export function Modal({
     backgroundColor: bgColor,
   };
 
-  useEffectOnce(() => {
+  useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      console.log('hardwareBackPress', visible, !!onDismiss);
       if (visible && onDismiss) {
         onDismiss();
         return true;
@@ -46,7 +46,7 @@ export function Modal({
     });
 
     return () => subscription.remove();
-  });
+  }, [visible, onDismiss]);
 
   return (
     <Portal>
