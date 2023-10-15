@@ -7,7 +7,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "gql": "zeus https://local.graphql.nhost.run/v1 ./src --typedDocumentNode --header='X-Hasura-Admin-Secret:nhost-admin-secret'"
+    "gql": "zeus https://local.graphql.nhost.run/v1 ./src/graphql --typedDocumentNode --header='X-Hasura-Admin-Secret:nhost-admin-secret'"
   },
   "peerDependencies": {
     "valibot": "^0.15.0"

@@ -1,5 +1,5 @@
 module.exports = {
   root: true,
   extends: ['@ralens/eslint-config/base'],
-  ignorePatterns: ['src/zeus/**/*'],
+  ignorePatterns: ['src/graphql/zeus/**/*'],
 };

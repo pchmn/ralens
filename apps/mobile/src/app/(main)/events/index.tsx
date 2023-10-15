@@ -1,4 +1,5 @@
-import { Event, EventsResponse, SUBSCRIBE_EVENTS } from '@ralens/core';
+import { ResultOf } from '@graphql-typed-document-node/core';
+import { scalars, typedGql } from '@ralens/core';
 import {
   Flex,
   FlexTouchableRipple,
@@ -17,23 +18,35 @@ import { Appbar, Button } from 'react-native-paper';
 const { width } = Dimensions.get('window');
 const itemSize = (width - spacingValue('sm') * 3) / 2;
 
-function mapResults(data: EventsResponse) {
-  const events = data.events.map((event) => ({
-    ...event,
-    fileCount: event.files_aggregate.aggregate.count,
-  }));
+const subscribeEvents = typedGql('subscription', { scalars })({
+  events: [
+    {},
+    {
+      id: true,
+      name: true,
+      files_aggregate: [{}, { aggregate: { count: [{ distinct: true }, true] } }],
+      participants_aggregate: [{}, { aggregate: { count: [{ distinct: true }, true] } }],
+    },
+  ],
+});
 
-  return events as (Event & { fileCount: number })[];
+function mapResults(data: ResultOf<typeof subscribeEvents>) {
+  return data.events.map((event) => ({
+    id: event.id,
+    name: event.name,
+    fileCount: event.files_aggregate.aggregate?.count,
+    participantCount: event.participants_aggregate?.aggregate?.count,
+  }));
 }
 
 export default function Events() {
   const theme = useAppTheme();
 
-  const { data: events } = useSubscription(SUBSCRIBE_EVENTS, {
+  const router = useRouter();
+
+  const { data: events } = useSubscription(subscribeEvents, {
     mapFn: mapResults,
   });
-
-  const router = useRouter();
 
   const goToCreateEvent = useCallback(() => router.push('/events/create/'), [router]);
 

@@ -52,7 +52,6 @@ select_permissions:
                 _eq: X-Hasura-User-Id
           - creatorId:
               _eq: X-Hasura-User-Id
-      allow_aggregations: true
 update_permissions:
   - role: anonymous
     permission:
