@@ -1,4 +1,4 @@
-import { ZeusScalars } from '../zeus';
+import { ZeusScalars } from './zeus';
 
 export const scalars = ZeusScalars({
   uuid: {
