@@ -17,3 +17,5 @@ google-services*.json
 .secrets
 .nhost
 .git_bak
+script.sh
+schema.graphql
