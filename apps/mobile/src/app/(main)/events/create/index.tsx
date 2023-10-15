@@ -17,12 +17,6 @@ export default function CreateEvent() {
 
   const { call } = useNhostFunctions();
 
-  // const [insertEvent, { loading: insertEventLoading }] = useInsertMutation<Event, { id: string }>(INSERT_EVENT);
-  // const [insertEventParticipant, { loading: insertEventParticipantLoading }] = useInsertMutation<
-  //   EventParticipant,
-  //   { eventId: string; userId: string }
-  // >(INSERT_EVENT_PARTICIPANT);
-  // const loading = insertEventLoading || insertEventParticipantLoading;
   const [loading, setLoading] = useState(false);
 
   const initialValues = useMemo(() => {

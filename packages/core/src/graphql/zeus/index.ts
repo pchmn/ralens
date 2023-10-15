@@ -17731,6 +17731,6 @@ type ZEUS_VARIABLES = {
 	["users_stream_cursor_value_input"]: ValueTypes["users_stream_cursor_value_input"];
 	["users_update_column"]: ValueTypes["users_update_column"];
 	["users_updates"]: ValueTypes["users_updates"];
-	["uuid"]: ValueTypes["uuid"];
+	["uuid"]: string;
 	["uuid_comparison_exp"]: ValueTypes["uuid_comparison_exp"];
 }
